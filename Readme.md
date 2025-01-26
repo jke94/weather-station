@@ -1,11 +1,11 @@
 # weather-station
 
-Under development... 
+Under development...
 
-## How to run
+## How to run.
 
 ```
-python script.py <station_id> <api_key>
+python .\castro_weather.py --station_id <STATION_ID> --api_key <API_KEY>
 ```
 
 ## Useful
