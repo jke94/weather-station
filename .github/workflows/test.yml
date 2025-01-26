@@ -1,6 +1,7 @@
 name: Weather Data Fetch
 on:
-
+  schedule:
+    - cron: '00 13 * * *'  # Ejecuta a las 12:45 UTC todos los días
 jobs:
   fetch_weather:
     runs-on: ubuntu-latest
