@@ -1,8 +1,8 @@
-name: run castro_weather.py
+name: Morning daily scheduler 09h UTC
 
 on:
   schedule:
-    - cron: '*/10 * * * *' # At every 10th minute.
+    - cron: '00 09 * * *'  # Running at 09:00 UTC every days.
 
 jobs:
   fetch_weather:
@@ -18,8 +18,8 @@ jobs:
 
       - name: Install Dependencies
         run: |
-            python -m pip install --upgrade pip
-            pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Run Script
         env:
