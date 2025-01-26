@@ -1,7 +1,7 @@
 name: Weather Data Fetch
 on:
   schedule:
-    - cron: '45 11 * * *'  # Ejecuta a las 12:45 UTC todos los días
+    - cron: '55 12 * * *'  # Ejecuta a las 12:45 UTC todos los días
 
 jobs:
   fetch_weather:
