@@ -2,7 +2,7 @@ name: run castro_wheather.py
 
 on:
   schedule:
-    - cron: '0 */1 * * *' # Runs every hour.
+    - cron: '*/10 * * * *' # At every 10th minute.
 
 jobs:
   fetch_weather:
@@ -25,4 +25,4 @@ jobs:
         env:
           STATION_ID: ${{ secrets.STATION_ID }}
           API_KEY: ${{ secrets.API_KEY }}
-        run: python castro_wheather.py $STATION_ID $API_KEY
+        run: python castro_wheather.py

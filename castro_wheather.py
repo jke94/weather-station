@@ -1,5 +1,5 @@
 import requests
-import argparse
+import os
 
 def obtener_datos_meteorologicos(station_id, api_key):
     url = f"https://api.weather.com/v2/pws/dailysummary/3day?apiKey={api_key}&stationId={station_id}&numericPrecision=decimal&format=json&units=m"
@@ -74,10 +74,12 @@ def obtener_datos_meteorologicos(station_id, api_key):
         return {"error": f"Error al obtener los datos: {response.status_code}"}
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Obtener datos meteorológicos.")
-    parser.add_argument("station_id", type=str, help="ID de la estación meteorológica.")
-    parser.add_argument("api_key", type=str, help="API Key para acceder a los datos.")
-    args = parser.parse_args()
 
-    resultado = obtener_datos_meteorologicos(args.station_id, args.api_key)
-    print(resultado)
+    station_id = os.getenv("STATION_ID")
+    api_key = os.getenv("API_KEY")
+
+    if not station_id or not api_key:
+        print("Error: Las variables de entorno STATION_ID y API_KEY deben estar definidas.")
+    else:
+        resultado = obtener_datos_meteorologicos(station_id, api_key)
+        print(resultado)
