@@ -1,7 +1,7 @@
 name: Weather Data Fetch
 on:
   schedule:
-    - cron: '55 12 * * *'  # Ejecuta a las 12:45 UTC todos los días
+    - cron: '00 13 * * *'  # Ejecuta a las 12:45 UTC todos los días
 
 jobs:
   fetch_weather:
@@ -22,4 +22,4 @@ jobs:
         env:
           STATION_ID: ${{ secrets.STATION_ID }}
           API_KEY: ${{ secrets.API_KEY }}
-        run: python castro_wheather.py $STATION_ID $API_KEY
+        run: python castro_wheather.py "$STATION_ID" "$API_KEY"
