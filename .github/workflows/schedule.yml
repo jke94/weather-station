@@ -1,4 +1,4 @@
-name: run castro_wheather.py at 15h 
+name: run castro_weather.py at 15h 
 
 on:
   schedule:
@@ -25,4 +25,4 @@ jobs:
         env:
           STATION_ID: ${{ secrets.STATION_ID }}
           API_KEY: ${{ secrets.API_KEY }}
-        run: python castro_wheather.py "$STATION_ID" "$API_KEY"
+        run: python castro_weather.py

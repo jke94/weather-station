@@ -1,4 +1,4 @@
-name: run castro_wheather.py
+name: run castro_weather.py
 
 on:
   schedule:

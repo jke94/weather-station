@@ -7,3 +7,7 @@ Under development...
 ```
 python script.py <station_id> <api_key>
 ```
+
+## Useful
+
+- [Crontab guru](https://crontab.guru/#*/10_*_*_*_*)
