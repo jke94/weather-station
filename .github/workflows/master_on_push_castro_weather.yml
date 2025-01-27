@@ -1,8 +1,9 @@
-name: Morning daily scheduler 09h UTC
+name: On push master castro_weather.py
 
 on:
-  schedule:
-    - cron: '00 09 * * *'  # Running at 09:00 UTC every days.
+    push:
+      branches:
+        - master
 
 jobs:
   fetch_weather:
