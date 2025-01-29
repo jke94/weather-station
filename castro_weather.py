@@ -3,7 +3,7 @@ import json
 import requests
 import os
 
-def wind_direction_calcultaion(wind_direction_avg:int) -> str:
+def wind_direction_calculataion(wind_direction_avg:int) -> str:
 
     if 0 <= wind_direction_avg <= 22.5 or 337.5 <= wind_direction_avg <= 360:
         return "N"
@@ -24,7 +24,7 @@ def wind_direction_calcultaion(wind_direction_avg:int) -> str:
     
     return "NONE"
 
-def index_UV_calculation(uv:int) -> str:
+def risk_UV_calculation(uv:int) -> str:
 
     if 0 <= uv <= 2:
         return "Bajo"
@@ -34,7 +34,7 @@ def index_UV_calculation(uv:int) -> str:
         return "Alto"
     elif 8 <= uv <= 10:
         return "Muy alto"
-    elif 11 <= uv <= 100:
+    elif 11 <= uv:
         return "Extremo"
 
     return "NONE"
@@ -52,32 +52,46 @@ def obtener_datos_meteorologicos(station_id:str, api_key:str) -> dict:
         data = response.json()
 
         # Get data.
+        obsTimeUtc = data['summaries'][1]['obsTimeUtc']
         tempHigh = data['summaries'][1]['metric']['tempHigh']
+        tempAvg = data['summaries'][1]['metric']['tempAvg']
         tempLow = data['summaries'][1]['metric']['tempLow']
+        humidityHigh = data['summaries'][1]['humidityHigh']
+        humidityLow = data['summaries'][1]['humidityLow']
+        humidityAvg = data['summaries'][1]['humidityAvg']        
         precipTotal = data['summaries'][1]['metric']['precipTotal']
         pressureMax = data['summaries'][1]['metric']['pressureMax']
         pressureMin = data['summaries'][1]['metric']['pressureMin']
-        windspeedAvg = data['summaries'][1]['metric']['windspeedAvg']
         windgustHigh = data['summaries'][1]['metric']['windgustHigh']
-        uvHigh = data['summaries'][0]['uvHigh']
-        winddirAvg = data['summaries'][0]['winddirAvg']
+        windGustAvg = data['summaries'][1]['metric']['windgustAvg']
+        windSpeedHigh = data['summaries'][1]['metric']['windspeedHigh']
+        windspeedAvg = data['summaries'][1]['metric']['windspeedAvg']
+        winddirAvg = data['summaries'][1]['winddirAvg']
+        uvIndexHigh = data['summaries'][1]['uvHigh']
+        solarRadiationHigh = data['summaries'][1]['solarRadiationHigh']
         
-        wind_direction = wind_direction_calcultaion(winddirAvg)
-        uv_high = index_UV_calculation(uvHigh)
+        wind_direction_avg = wind_direction_calculataion(winddirAvg)
+        uvHighRisk = risk_UV_calculation(uvIndexHigh)
 
-        # Data output
         output = {
-            "tempHigh": tempHigh,
-            "tempLow": tempLow,
-            "precipTotal": precipTotal,
-            "pressureMax": pressureMax,
-            "pressureMin": pressureMin,
-            "windspeedAvg": windspeedAvg,
-            "windgustHigh": windgustHigh,
-            "winddirAvg": winddirAvg,
-            "uvHigh": uvHigh,
-            "WindDirec": wind_direction,
-            "uvHighLetter": uv_high
+            "Date": obsTimeUtc,
+            "TemperatureHigh": tempHigh,
+            "TemperatureAvg": tempAvg,
+            "TemperatureLow": tempLow,
+            "HumidityHigh" : humidityHigh,
+            "HumidityLow" : humidityLow,
+            "HumidityAvg" : humidityAvg,
+            "PricipitationTotal": precipTotal,
+            "PressureMax": pressureMax,
+            "PressureMin": pressureMin,
+            "WindSpeedHigh": windSpeedHigh,      
+            "WindSpeedAvg": windspeedAvg,      
+            "WindGustHigh": windgustHigh,
+            "WindGustAvg": windGustAvg,
+            "WindDirectionAvg": wind_direction_avg,
+            "UvHighRisk": uvHighRisk,
+            "UvIndexHigh": uvIndexHigh,
+            "SolarRadiationHigh" : solarRadiationHigh
         }
 
         return output
