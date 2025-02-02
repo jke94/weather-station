@@ -1,9 +1,61 @@
 import argparse
 import json
+import jsonschema
 import os
 import requests
 
+from jsonschema import validate
+from pydantic import BaseModel
+from typing import List
 from datetime import datetime, timedelta
+
+# Metric section
+class Metric(BaseModel):
+    tempHigh: float
+    tempLow: float
+    tempAvg: float
+    windspeedHigh: float
+    windspeedLow: float
+    windspeedAvg: float
+    windgustHigh: float
+    windgustLow: float
+    windgustAvg: float
+    dewptHigh: float
+    dewptLow: float
+    dewptAvg: float
+    windchillHigh: float
+    windchillLow: float
+    windchillAvg: float
+    heatindexHigh: float
+    heatindexLow: float
+    heatindexAvg: float
+    pressureMax: float
+    pressureMin: float
+    pressureTrend: float
+    precipRate: float
+    precipTotal: float
+
+# Observation metric
+class Observation(BaseModel):
+    stationID: str
+    tz: str
+    obsTimeUtc: str
+    obsTimeLocal: str
+    epoch: int
+    lat: float
+    lon: float
+    solarRadiationHigh: float
+    uvHigh: float
+    winddirAvg: int
+    humidityHigh: float
+    humidityLow: float
+    humidityAvg: float
+    qcStatus: int
+    metric: Metric
+
+# Full response
+class WeatherResponse(BaseModel):
+    observations: List[Observation]
 
 def wind_direction_calculataion(wind_direction_avg:int) -> str:
 
@@ -45,59 +97,81 @@ def risk_UV_calculation(uv:int) -> str:
 
     return "NONE"
 
-def obtener_datos_meteorologicos(station_id:str, api_key:str, date:str) -> dict:
+def load_json_schema(schema_path: str):
+    with open(schema_path, "r", encoding="utf-8") as file:
+        return json.load(file)
+
+def get_weather_data(station_id:str, api_key:str, date:str) -> dict:
     
-    url = f"https://api.weather.com/v2/pws/history/daily?stationId={station_id}&format=json&units=m&date={date}&apiKey={api_key}&numericPrecision=decimal"
-
-    response = requests.get(url)
-
-    if response.status_code != 200:
-        return {"error": f"Error getting data: {response.status_code}"}
-        
     try:
+
+        url = f"https://api.weather.com/v2/pws/history/daily?stationId={station_id}&format=json&units=m&date={date}&apiKey={api_key}&numericPrecision=decimal"
+
+        response = requests.get(url)
+
+        schema = load_json_schema("./json-schema/v2/pws-history-daily.json")
+
+        if response.status_code != 200:
+
+            return {"error": f"❌ Error getting data: {response.status_code}"}
+
+        # Get data.
         data = response.json()
-
-        metric_data = data["observations"][0]['metric']
         
-        wind_direction_avg = wind_direction_calculataion(data["observations"][0]["winddirAvg"])
-        uvHighRisk = risk_UV_calculation(data["observations"][0]["uvHigh"])
+        # Validate data against the schema
+        validate(instance=data, schema=schema)
 
+        # Deserialize data against the previously defined model
+        weather_response = WeatherResponse(**data)
+        
+        # Bussines logic to convert data.
+        wind_direction_avg = wind_direction_calculataion(weather_response.observations[0].winddirAvg)
+        uv_high_risk = risk_UV_calculation(weather_response.observations[0].uvHigh)
         formatted_date = datetime.strptime(date, "%Y%m%d").strftime("%Y-%m-%d")
 
+        # Generate output model.
         output = {
             "Date": formatted_date,
-            "TemperatureHigh": metric_data["tempHigh"],
-            "TemperatureAvg": metric_data["tempAvg"],
-            "TemperatureLow": metric_data["tempLow"],
-            "DewPointHigh": metric_data["dewptHigh"],
-            "DewPointLow": metric_data["dewptLow"],
-            "DewPointAvg": metric_data["dewptAvg"],
-            "HumidityHigh": data["observations"][0]["humidityHigh"],
-            "HumidityLow": data["observations"][0]["humidityLow"],
-            "HumidityAvg": data["observations"][0]["humidityAvg"],
-            "PricipitationTotal": metric_data["precipTotal"],
-            "PressureMax": metric_data["pressureMax"],
-            "PressureMin": metric_data["pressureMin"],
-            "WindSpeedHigh": metric_data["windspeedHigh"],
-            "WindSpeedAvg": metric_data["windspeedAvg"],
-            "WindGustHigh": metric_data["windgustHigh"],
-            "WindGustAvg": metric_data["windgustAvg"],
+            "TemperatureHigh": weather_response.observations[0].metric.tempHigh,
+            "TemperatureAvg": weather_response.observations[0].metric.tempAvg,
+            "TemperatureLow": weather_response.observations[0].metric.tempLow,
+            "DewPointHigh": weather_response.observations[0].metric.dewptHigh,
+            "DewPointLow": weather_response.observations[0].metric.dewptLow,
+            "DewPointAvg": weather_response.observations[0].metric.dewptAvg,
+            "HumidityHigh": weather_response.observations[0].humidityHigh,
+            "HumidityLow": weather_response.observations[0].humidityLow,
+            "HumidityAvg":  weather_response.observations[0].humidityAvg,
+            "PricipitationTotal": weather_response.observations[0].metric.precipTotal,
+            "PressureMax": weather_response.observations[0].metric.pressureMax,
+            "PressureMin": weather_response.observations[0].metric.pressureMin,
+            "WindSpeedHigh": weather_response.observations[0].metric.windspeedHigh,
+            "WindSpeedAvg": weather_response.observations[0].metric.windgustAvg,
+            "WindGustHigh": weather_response.observations[0].metric.windgustHigh,
+            "WindGustAvg": weather_response.observations[0].metric.windgustAvg,
             "WindDirectionAvg": wind_direction_avg,
-            "UvHighRisk": uvHighRisk,
-            "UvIndexHigh": data["observations"][0]["uvHigh"],
-            "SolarRadiationHigh" : data["observations"][0]["solarRadiationHigh"]
+            "UvHighRisk": uv_high_risk,
+            "UvIndexHigh": weather_response.observations[0].uvHigh,
+            "SolarRadiationHigh" : weather_response.observations[0].solarRadiationHigh
         }
 
         return output
 
+    except requests.exceptions.RequestException as e:
+
+        return {"error": f"❌ HTTP request failed: {e}"}
+
     except ValueError:
-        return {"error": "Error al procesar los datos JSON."}
-        
+
+        return {"error": "❌ Error al procesar los datos JSON."}
+    
+    except jsonschema.exceptions.ValidationError as e:
+
+        return {"error": f"❌ JSON Schema validation failed: {e}"}    
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Obtener datos meteorológicos.")
-    parser.add_argument("--station_id", type=str, help="ID de la estación meteorológica.")
+    parser = argparse.ArgumentParser(description="Obtain weather data.")
+    parser.add_argument("--station_id", type=str, help="Weather station ID.")
     parser.add_argument("--api_key", type=str, help="API Key para acceder a los datos.")
 
     args = parser.parse_args()
@@ -110,8 +184,11 @@ if __name__ == "__main__":
     yesterday = datetime.now() - timedelta(days=1)
     yesterday_formatted_date = yesterday.strftime("%Y%m%d")   
 
+    result = {}
+
     if not station_id or not api_key:
-        print("Error: The environment variables STATION_ID and API_KEY must be defined or passed as arguments.")
+        result = {"error":"❌ The environment variables STATION_ID and API_KEY must be defined or passed as arguments."}
     else:
-        resultado = obtener_datos_meteorologicos(station_id, api_key, yesterday_formatted_date)
-        print(json.dumps(resultado, indent=4))
+        result = get_weather_data(station_id, api_key, yesterday_formatted_date)
+
+    print(json.dumps(result, indent=4))

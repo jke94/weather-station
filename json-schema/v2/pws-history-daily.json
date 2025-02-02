@@ -1,0 +1,215 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "observations": {
+            "type": "array",
+            "description": "List of weather observations",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "stationID": {
+                        "type": "string",
+                        "description": "Weather station identifier"
+                    },
+                    "tz": {
+                        "type": "string",
+                        "description": "Time zone of the observation"
+                    },
+                    "obsTimeUtc": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Observation time in UTC format"
+                    },
+                    "obsTimeLocal": {
+                        "type": "string",
+                        "description": "Observation time in local time zone"
+                    },
+                    "epoch": {
+                        "type": "integer",
+                        "description": "Epoch timestamp of the observation"
+                    },
+                    "lat": {
+                        "type": "number",
+                        "description": "Latitude of the weather station"
+                    },
+                    "lon": {
+                        "type": "number",
+                        "description": "Longitude of the weather station"
+                    },
+                    "solarRadiationHigh": {
+                        "type": "number",
+                        "description": "Maximum solar radiation recorded"
+                    },
+                    "uvHigh": {
+                        "type": "number",
+                        "description": "Maximum UV index recorded"
+                    },
+                    "winddirAvg": {
+                        "type": "integer",
+                        "description": "Average wind direction in degrees"
+                    },
+                    "humidityHigh": {
+                        "type": "number",
+                        "description": "Maximum humidity recorded"
+                    },
+                    "humidityLow": {
+                        "type": "number",
+                        "description": "Minimum humidity recorded"
+                    },
+                    "humidityAvg": {
+                        "type": "number",
+                        "description": "Average humidity recorded"
+                    },
+                    "qcStatus": {
+                        "type": "integer",
+                        "description": "Quality control status of the observation"
+                    },
+                    "metric": {
+                        "type": "object",
+                        "description": "Metric weather measurements",
+                        "properties": {
+                            "tempHigh": {
+                                "type": "number",
+                                "description": "Maximum temperature recorded"
+                            },
+                            "tempLow": {
+                                "type": "number",
+                                "description": "Minimum temperature recorded"
+                            },
+                            "tempAvg": {
+                                "type": "number",
+                                "description": "Average temperature recorded"
+                            },
+                            "windspeedHigh": {
+                                "type": "number",
+                                "description": "Maximum wind speed recorded"
+                            },
+                            "windspeedLow": {
+                                "type": "number",
+                                "description": "Minimum wind speed recorded"
+                            },
+                            "windspeedAvg": {
+                                "type": "number",
+                                "description": "Average wind speed recorded"
+                            },
+                            "windgustHigh": {
+                                "type": "number",
+                                "description": "Maximum wind gust recorded"
+                            },
+                            "windgustLow": {
+                                "type": "number",
+                                "description": "Minimum wind gust recorded"
+                            },
+                            "windgustAvg": {
+                                "type": "number",
+                                "description": "Average wind gust recorded"
+                            },
+                            "dewptHigh": {
+                                "type": "number",
+                                "description": "Maximum dew point recorded"
+                            },
+                            "dewptLow": {
+                                "type": "number",
+                                "description": "Minimum dew point recorded"
+                            },
+                            "dewptAvg": {
+                                "type": "number",
+                                "description": "Average dew point recorded"
+                            },
+                            "windchillHigh": {
+                                "type": "number",
+                                "description": "Maximum wind chill recorded"
+                            },
+                            "windchillLow": {
+                                "type": "number",
+                                "description": "Minimum wind chill recorded"
+                            },
+                            "windchillAvg": {
+                                "type": "number",
+                                "description": "Average wind chill recorded"
+                            },
+                            "heatindexHigh": {
+                                "type": "number",
+                                "description": "Maximum heat index recorded"
+                            },
+                            "heatindexLow": {
+                                "type": "number",
+                                "description": "Minimum heat index recorded"
+                            },
+                            "heatindexAvg": {
+                                "type": "number",
+                                "description": "Average heat index recorded"
+                            },
+                            "pressureMax": {
+                                "type": "number",
+                                "description": "Maximum atmospheric pressure recorded"
+                            },
+                            "pressureMin": {
+                                "type": "number",
+                                "description": "Minimum atmospheric pressure recorded"
+                            },
+                            "pressureTrend": {
+                                "type": "number",
+                                "description": "Trend of atmospheric pressure changes"
+                            },
+                            "precipRate": {
+                                "type": "number",
+                                "description": "Precipitation rate recorded"
+                            },
+                            "precipTotal": {
+                                "type": "number",
+                                "description": "Total precipitation recorded"
+                            }
+                        },
+                        "required": [
+                            "tempHigh",
+                            "tempLow",
+                            "tempAvg",
+                            "windspeedHigh",
+                            "windspeedLow",
+                            "windspeedAvg",
+                            "windgustHigh",
+                            "windgustLow",
+                            "windgustAvg",
+                            "dewptHigh",
+                            "dewptLow",
+                            "dewptAvg",
+                            "windchillHigh",
+                            "windchillLow",
+                            "windchillAvg",
+                            "heatindexHigh",
+                            "heatindexLow",
+                            "heatindexAvg",
+                            "pressureMax",
+                            "pressureMin",
+                            "pressureTrend",
+                            "precipRate",
+                            "precipTotal"
+                        ]
+                    }
+                },
+                "required": [
+                    "stationID",
+                    "tz",
+                    "obsTimeUtc",
+                    "obsTimeLocal",
+                    "epoch",
+                    "lat",
+                    "lon",
+                    "solarRadiationHigh",
+                    "uvHigh",
+                    "winddirAvg",
+                    "humidityHigh",
+                    "humidityLow",
+                    "humidityAvg",
+                    "qcStatus",
+                    "metric"
+                ]
+            }
+        }
+    },
+    "required": [
+        "observations"
+    ]
+}
