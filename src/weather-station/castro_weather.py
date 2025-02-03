@@ -5,57 +5,9 @@ import os
 import requests
 
 from jsonschema import validate
-from pydantic import BaseModel
-from typing import List
 from datetime import datetime, timedelta
 
-# Metric section
-class Metric(BaseModel):
-    tempHigh: float
-    tempLow: float
-    tempAvg: float
-    windspeedHigh: float
-    windspeedLow: float
-    windspeedAvg: float
-    windgustHigh: float
-    windgustLow: float
-    windgustAvg: float
-    dewptHigh: float
-    dewptLow: float
-    dewptAvg: float
-    windchillHigh: float
-    windchillLow: float
-    windchillAvg: float
-    heatindexHigh: float
-    heatindexLow: float
-    heatindexAvg: float
-    pressureMax: float
-    pressureMin: float
-    pressureTrend: float
-    precipRate: float
-    precipTotal: float
-
-# Observation metric
-class Observation(BaseModel):
-    stationID: str
-    tz: str
-    obsTimeUtc: str
-    obsTimeLocal: str
-    epoch: int
-    lat: float
-    lon: float
-    solarRadiationHigh: float
-    uvHigh: float
-    winddirAvg: int
-    humidityHigh: float
-    humidityLow: float
-    humidityAvg: float
-    qcStatus: int
-    metric: Metric
-
-# Full response
-class WeatherResponse(BaseModel):
-    observations: List[Observation]
+from model.pws.history.daily.weather_response import WeatherResponse
 
 def wind_direction_calculataion(wind_direction_avg:int) -> str:
 
