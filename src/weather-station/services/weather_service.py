@@ -4,7 +4,6 @@ import json
 
 from datetime import datetime
 from typing import Callable, Optional
-from dataclasses import dataclass
 
 from model.pws.history.daily.weather_response import WeatherResponse
 from model.report.weather_day_summary_report import WeatherDaySummaryReport

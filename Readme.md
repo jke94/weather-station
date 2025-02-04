@@ -17,3 +17,4 @@ python .\src\weather-station\test\run_unit_tests.py
 ## Useful
 
 - [Crontab guru](https://crontab.guru/#*/10_*_*_*_*)
+- [X Developer portal](https://developer.twitter.com/en/portal/projects-and-apps)
