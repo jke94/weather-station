@@ -1,90 +1,12 @@
 import argparse
-import json
-import jsonschema
 import os
-import requests
 
 from datetime import datetime, timedelta
-from jsonschema import validate
-from typing import Optional
 
-from business_logic.calculate_risk_uv import calculate_risk_uv
-from business_logic.calculate_wind_direction import calculate_wind_direction
-
-from model.pws.history.daily.weather_response import WeatherResponse
-from model.report.weather_day_summary_report import WeatherDaySummaryReport
-
-def load_json_schema(schema_path: str):
-    with open(schema_path, "r", encoding="utf-8") as file:
-        return json.load(file)
-
-def build_weather_day_summary_report(station_id:str, api_key:str, date:str) -> Optional[WeatherDaySummaryReport]:
-    
-    try:
-
-        url = f"https://api.weather.com/v2/pws/history/daily?stationId={station_id}&format=json&units=m&date={date}&apiKey={api_key}&numericPrecision=decimal"
-
-        response = requests.get(url)
-
-        if response.status_code != 200:
-
-            print({"error" : f"Error getting data. HTTP code: {response.status_code}."})
-
-            return None
-
-        # Get data.
-        data = response.json()
-
-        # Load JSON schema to validate the response.
-        schema = load_json_schema("./json-schema/v2/pws-history-daily.json")
-        
-        # Validate data against the schema.
-        validate(instance=data, schema=schema)
-
-        # Deserialize data against the previously defined model.
-        weather_response = WeatherResponse(**data)
-        
-        # Bussines logic to convert data.
-        wind_direction_avg = calculate_wind_direction(weather_response.observations[0].winddirAvg)
-        uv_high_risk = calculate_risk_uv(weather_response.observations[0].uvHigh)
-        formatted_date = datetime.strptime(date, "%Y%m%d").strftime("%Y-%m-%d")
-
-        # Generate output model.
-        return WeatherDaySummaryReport(
-            Date=formatted_date,
-            TemperatureHigh=weather_response.observations[0].metric.tempHigh,
-            TemperatureAvg=weather_response.observations[0].metric.tempAvg,
-            TemperatureLow=weather_response.observations[0].metric.tempLow,
-            DewPointHigh=weather_response.observations[0].metric.dewptHigh,
-            DewPointLow=weather_response.observations[0].metric.dewptLow,
-            DewPointAvg=weather_response.observations[0].metric.dewptAvg,
-            HumidityHigh=weather_response.observations[0].humidityHigh,
-            HumidityLow=weather_response.observations[0].humidityLow,
-            HumidityAvg=weather_response.observations[0].humidityAvg,
-            PrecipitationTotal=weather_response.observations[0].metric.precipTotal,
-            PressureMax=weather_response.observations[0].metric.pressureMax,
-            PressureMin=weather_response.observations[0].metric.pressureMin,
-            WindSpeedHigh=weather_response.observations[0].metric.windspeedHigh,
-            WindSpeedAvg=weather_response.observations[0].metric.windgustAvg,
-            WindGustHigh=weather_response.observations[0].metric.windgustHigh,
-            WindGustAvg=weather_response.observations[0].metric.windgustAvg,
-            WindDirectionAvg=wind_direction_avg,
-            UvHighRisk=uv_high_risk,
-            UvIndexHigh=weather_response.observations[0].uvHigh,
-            SolarRadiationHigh=weather_response.observations[0].solarRadiationHigh
-        )
-
-    except requests.exceptions.RequestException as e:
-
-        return {"error" : f"HTTP request failed: {e}"}
-
-    except ValueError:
-
-        return {"error" : "Error al procesar los datos JSON."}
-    
-    except jsonschema.exceptions.ValidationError as e:
-
-        return {"error" : f"JSON Schema validation failed: {e}"}    
+from services.weather_service import WeatherService
+from services.weather_service import fetch_data_real
+from services.weather_service import validate_json_real
+from services.weather_service import deserialize_weather_data_real
 
 def main(station_id:str, api_key:str, date:str) -> int:
     
@@ -93,7 +15,16 @@ def main(station_id:str, api_key:str, date:str) -> int:
         print({"error" : "The environment variables STATION_ID and API_KEY must be defined as environment variables or passed as arguments."})
         return -1
     
-    weather_day_summary_report = build_weather_day_summary_report(station_id, api_key, date)
+    # Call to the weather service to get the data inyecting functions.
+    weather_service = WeatherService(
+        fetch_data=fetch_data_real,
+        validate_json=validate_json_real,
+        deserialize_weather_data=deserialize_weather_data_real
+    )
+
+    weather_day_summary_report = weather_service.build_weather_day_summary_report(
+        station_id, api_key, date
+    )
 
     if weather_day_summary_report == None:
         
