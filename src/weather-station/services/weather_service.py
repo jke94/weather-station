@@ -59,7 +59,7 @@ class WeatherService:
                 PressureMax=weather_response.observations[0].metric.pressureMax,
                 PressureMin=weather_response.observations[0].metric.pressureMin,
                 WindSpeedHigh=weather_response.observations[0].metric.windspeedHigh,
-                WindSpeedAvg=weather_response.observations[0].metric.windgustAvg,
+                WindSpeedAvg=weather_response.observations[0].metric.windspeedAvg,
                 WindGustHigh=weather_response.observations[0].metric.windgustHigh,
                 WindGustAvg=weather_response.observations[0].metric.windgustAvg,
                 WindDirectionAvg=wind_direction_avg,
