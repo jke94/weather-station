@@ -8,12 +8,9 @@ Finally it´s reported in X platform [
 ⛅Tiempo Castrocontrigo](https://x.com/Castro_tiempo)✌️
 
 <p align="center">
-  <figure>
-    <img src="https://github.com/jke94/weather-station/blob/master/images/profile_photo_weather_station.jpg" 
-    alt="Weather station photo" 
-    style="max-width:450px; max-height:450px; height:auto;">
-    <figcaption style="text-align:center; font-size:14px; color:gray;">Weather Station photo</figcaption>
-  </figure>
+  <img src="https://github.com/jke94/weather-station/blob/master/images/profile_photo_weather_station.jpg" 
+  alt="Weather station photo" 
+  style="max-width:450px; max-height:450px; height:auto;">
 </p>
 
 Github actio status:
