@@ -14,22 +14,27 @@ from model.report.weather_day_summary_report import WeatherDaySummaryReport
 def build_tweet(weather_day_summary_report: WeatherDaySummaryReport) -> str:
     
     date_str = weather_day_summary_report.Date  # TODO: Format
-    wind_gust_high = weather_day_summary_report.WindGustHigh
-    wind_speed_avg = weather_day_summary_report.WindSpeedAvg
+
     temperature_max = weather_day_summary_report.TemperatureHigh
     temperature_low = weather_day_summary_report.TemperatureLow
-    precipitation_total = weather_day_summary_report.PrecipitationTotal
+    temperature_avg = weather_day_summary_report.TemperatureAvg
+    precipitation_total = weather_day_summary_report.PrecipitationTotal    
+    wind_speed_avg = weather_day_summary_report.WindSpeedAvg
+    wind_direction_avg = weather_day_summary_report.WindDirectionAvg
+    wind_gust_high = weather_day_summary_report.WindGustHigh    
     uv_high = weather_day_summary_report.UvIndexHigh
     uv_risk = weather_day_summary_report.UvHighRisk
+    solar_radiation_high = weather_day_summary_report.SolarRadiationHigh
     
     msg = (
         f"¡Buenos días Castrocontrigo!\n"
         f"Resumen de ayer 📅 {date_str}:\n\n"
-        f"💨 Viento : {wind_speed_avg} km/h [W]\n"
-        f"🌀 Racha: {wind_gust_high} km/h\n"
-        f"🌡️ Temperatura: Max {temperature_max} °C | Min {temperature_low} C\n"
-        f"💧 Lluvia: {precipitation_total} L/m²\n"
-        f"☀️ Índice UV: {uv_high} [{uv_risk}]"
+        f"🌡️ Temperatura (ºC): Max. {temperature_max} | Min. {temperature_low} | Media. {temperature_avg}\n"
+        f"💧 Lluvia: {precipitation_total} L/m²\n"             
+        f"💨 Viento medio: {wind_speed_avg} km/h | Dir. media: {wind_direction_avg}\n"
+        f"🌀 Racha viento max.: {wind_gust_high} km/h\n"
+        f"☀️ Índice UV: {uv_high} ({uv_risk})\n"
+        f"😎 Radiación solar max.: {solar_radiation_high} W/m²"
     )
 
     return msg
@@ -105,6 +110,8 @@ def main(
     # print(f"https://twitter.com/user/status/{response.data['id']}")
 
     # response.close()
+
+    return 0
 
 if __name__ == "__main__":
 
