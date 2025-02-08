@@ -7,9 +7,20 @@ The information is obtained from [Weather Underground](https://www.wunderground.
 Finally it´s reported in X platform [
 ⛅Tiempo Castrocontrigo](https://x.com/Castro_tiempo)✌️
 
-[![Morning daily scheduler yesterday report 09h UTC](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler.yml)
+<p align="center">
+  <img src="https://github.com/jke94/weather-station/blob/master/images/profile_photo_weather_station.jpg" 
+  alt="Weather station photo" 
+  style="max-width:450px; max-height:450px; height:auto;">
+</p>
 
-[![On push master morning_daily_scheduler.py](https://github.com/jke94/weather-station/actions/workflows/master_on_push_castro_weather.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/master_on_push_castro_weather.yml)
+Github action status:
+
+- [![On push master morning_daily_scheduler.py](https://github.com/jke94/weather-station/actions/workflows/master_on_push_castro_weather.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/master_on_push_castro_weather.yml)
+
+- [![Morning daily scheduler yesterday tweet in X (Twitter) at 09h UTC](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler_tweet_in_X.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler_tweet_in_X.yml)
+
+- [![Morning daily scheduler yesterday report 09h UTC](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler.yml)
+
 
 ## How to run
 
