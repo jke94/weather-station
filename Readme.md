@@ -12,8 +12,11 @@ Weather station automatization reports using with Github Actions and X (also kno
 
 The information is obtained from [Weather Underground](https://www.wunderground.com/) platform. Launching HTTP request over the Web API to get information about the weather information sent by our weather station.
 
-Finally it´s reported in X platform [
-⛅Tiempo Castrocontrigo](https://x.com/Castro_tiempo)✌️
+Finally it´s reported in X platform:
+
+- X (Twitter) profile: [⛅Tiempo Castrocontrigo](https://x.com/Castro_tiempo)✌️
+
+Here, a picture about the weather station 📸
 
 <p align="center">
   <img src="https://github.com/jke94/weather-station/blob/master/images/profile_photo_weather_station.jpg" 
