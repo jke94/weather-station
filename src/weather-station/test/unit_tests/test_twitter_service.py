@@ -6,7 +6,7 @@ from services.twitter_service import TwitterService, build_tweet, translate_to_s
 class TestTwitterService(unittest.TestCase):
 
     def setUp(self):
-        """Arrange: Configurar datos de prueba y mocks"""
+        """Configure mocks"""
         self.mock_create_tweet = MagicMock(return_value="https://twitter.com/user/status/123456789")
 
         self.weather_report = WeatherDaySummaryReport(
@@ -64,7 +64,7 @@ class TestTwitterService(unittest.TestCase):
                 self.assertIn(value, tweet)
 
     def test_post_weather_report_calls_create_tweet_correctly(self):
-        """Act: Llamar a `post_weather_report`. Assert: Validar llamada a `create_tweet`."""
+        """Act: Call `post_weather_report`. Assert: Validate call to `create_tweet`."""
 
         tweet_url = self.twitter_service.post_weather_report(
             "API_KEY_FAKE", 
@@ -84,7 +84,7 @@ class TestTwitterService(unittest.TestCase):
         self.assertEqual(tweet_url, "https://twitter.com/user/status/123456789")
 
     def test_translate_to_spanish_uv_risk(self):
-        """Act & Assert: Probar traducción de los distintos niveles de UV."""
+        """Act & Assert: Testing translation of different UV levels."""
 
         self.assertEqual(translate_to_spanish_uv_risk("Low"), "Bajo")
         self.assertEqual(translate_to_spanish_uv_risk("Medium"), "Medio")
