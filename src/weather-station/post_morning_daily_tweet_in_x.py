@@ -1,6 +1,5 @@
 import argparse
 import os
-import tweepy
 
 from datetime import datetime, timedelta
 
@@ -9,35 +8,9 @@ from services.weather_service import fetch_data_real
 from services.weather_service import validate_json_real
 from services.weather_service import deserialize_weather_data_real
 
-from model.report.weather_day_summary_report import WeatherDaySummaryReport
-
-def build_tweet(weather_day_summary_report: WeatherDaySummaryReport) -> str:
-    
-    date_str = weather_day_summary_report.Date  # TODO: Format
-
-    temperature_max = weather_day_summary_report.TemperatureHigh
-    temperature_low = weather_day_summary_report.TemperatureLow
-    temperature_avg = weather_day_summary_report.TemperatureAvg
-    precipitation_total = weather_day_summary_report.PrecipitationTotal    
-    wind_speed_avg = weather_day_summary_report.WindSpeedAvg
-    wind_direction_avg = weather_day_summary_report.WindDirectionAvg
-    wind_gust_high = weather_day_summary_report.WindGustHigh    
-    uv_high = weather_day_summary_report.UvIndexHigh
-    uv_risk = weather_day_summary_report.UvHighRisk
-    solar_radiation_high = weather_day_summary_report.SolarRadiationHigh
-    
-    msg = (
-        f"¡Buenos días Castrocontrigo!\n"
-        f"Resumen de ayer 📅 {date_str}:\n\n"
-        f"🌡️ Temperatura (ºC): Max. {temperature_max} | Min. {temperature_low} | Media. {temperature_avg}\n"
-        f"💧 Lluvia: {precipitation_total} L/m²\n"             
-        f"💨 Viento medio: {wind_speed_avg} km/h | Dir. media: {wind_direction_avg}\n"
-        f"🌀 Racha viento max.: {wind_gust_high} km/h\n"
-        f"☀️ Índice UV: {uv_high} ({uv_risk})\n"
-        f"😎 Radiación solar max.: {solar_radiation_high} W/m²"
-    )
-
-    return msg
+from services.twitter_service import TwitterService
+from services.twitter_service import build_tweet
+from services.twitter_service import create_tweet
 
 def main(
     weather_underground_station_id:str,
@@ -62,8 +35,6 @@ def main(
             
         return -1
 
-
-
     # Call to the weather service to get the data inyecting functions.
     weather_service = WeatherService(
         fetch_data=fetch_data_real,
@@ -83,33 +54,36 @@ def main(
         print({"error" : "Error trying to get data."})
         return -2
 
+    print('DATA API -------------------------------------------')
     print(weather_day_summary_report.model_dump_json(indent=4))
 
-    # Build message
-    text_message = build_tweet(weather_day_summary_report)
+    # Call to Twitter (or also called X) service to build tweet content.
+    twitter_service = TwitterService(
+        build_tweet=build_tweet,
+        create_tweet=create_tweet
+    )
+
+    tweet_message = twitter_service.build_tweet(weather_day_summary_report)
+
+    # Development: Show tweet info.
+    print('Tweet content --------------------------------------')
+    print(tweet_message)
     print('--------------------------------------')
-    print(text_message)
-    print('--------------------------------------')
-    print(f'Tweet length: {len(text_message)}')
+    print(f'Tweet length: {len(tweet_message)}')
 
+    tweet_url = twitter_service.create_tweet(
+        api_key_for_x,
+        api_key_secret_for_x,
+        access_token_for_x,
+        access_secret_token_for_x,
+        tweet_message
+    )
 
-    # TODO: Uncomment for tweet publication
-
-    # Create X (Twitter) client.
-    # client = tweepy.Client(
-    #     consumer_key=api_key_for_x, 
-    #     consumer_secret=api_key_secret_for_x,
-    #     access_token=access_token_for_x, 
-    #     access_token_secret=access_secret_token_for_x
-    # )
-
-    # response = client.create_tweet(
-    #     text=text_message
-    # )
-
-    # print(f"https://twitter.com/user/status/{response.data['id']}")
-
-    # response.close()
+    if tweet_url == "NONE":
+        print("Error in create tweet process!")
+        return -3
+    
+    print(f'Created tweet: {tweet_url}')
 
     return 0
 
@@ -117,7 +91,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Obtain weather data.")
     
-    # Weather Underground
+    # Weather Underground arguments.
     parser.add_argument("--weather_underground_station_id", 
                         type=str, 
                         help="Weather Underground station ID.", 
