@@ -40,13 +40,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Obtain weather data.")
     parser.add_argument("--weather_underground_station_id", 
                         type=str, 
-                        help="Weather Underground station ID.", 
-                        required=True
+                        help="Weather Underground station ID."
     )
     parser.add_argument("--weather_underground_api_key", 
                         type=str, 
-                        help="Weather Underground api Key.", 
-                        required=True
+                        help="Weather Underground api Key."
     )
 
     args = parser.parse_args()

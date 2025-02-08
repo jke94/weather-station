@@ -94,8 +94,7 @@ if __name__ == "__main__":
     # Weather Underground arguments.
     parser.add_argument("--weather_underground_station_id", 
                         type=str, 
-                        help="Weather Underground station ID.", 
-                        required=True
+                        help="Weather Underground station ID."
     )
     parser.add_argument("--weather_underground_api_key", 
                         type=str, 
@@ -104,10 +103,10 @@ if __name__ == "__main__":
     )
     
     # X (Twitter) arguments.
-    parser.add_argument("--x_api_key", type=str, help="X (Twitter) api key", required=True)
-    parser.add_argument("--x_api_key_secret", type=str, help="X (Twitter) secret api key", required=True)
-    parser.add_argument("--x_access_token", type=str, help="X (Twitter) access token", required=True)
-    parser.add_argument("--x_access_secret_token", type=str, help="X (Twitter) access secret token", required=True)
+    parser.add_argument("--x_api_key", type=str, help="X (Twitter) api key")
+    parser.add_argument("--x_api_key_secret", type=str, help="X (Twitter) secret api key")
+    parser.add_argument("--x_access_token", type=str, help="X (Twitter) access token")
+    parser.add_argument("--x_access_secret_token", type=str, help="X (Twitter) access secret token")
 
     args = parser.parse_args()
 
