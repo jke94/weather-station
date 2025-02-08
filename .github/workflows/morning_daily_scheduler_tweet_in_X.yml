@@ -26,14 +26,14 @@ jobs:
   
       - name: Run morning daily scheduler script.
         env:
-            STATION_ID: ${{ secrets.STATION_ID }}
-            API_KEY: ${{ secrets.API_KEY }}
+            STATION_ID: ${{ secrets.WEATHER_UNDERGROUND_STATION_ID }}
+            API_KEY: ${{ secrets.WEATHER_UNDERGROUND_API_KEY }}
         run: python ./src/weather-station/morning_daily_scheduler.py
 
       - name: Run morning daily scheduler tweet in X (Twitter) script.
         env:
             WEATHER_UNDERGROUND_STATION_ID: ${{ secrets.WEATHER_UNDERGROUND_STATION_ID }}
-            WEATHER_UNDERGROUND_API_KEY: ${{ secrets.WEATHER_UNDERGROUND_API_KEY_ }}
+            WEATHER_UNDERGROUND_API_KEY: ${{ secrets.WEATHER_UNDERGROUND_API_KEY }}
             X_API_KEY: ${{ secrets.X_API_KEY }}
             X_API_KEY_SECRET: ${{ secrets.X_API_KEY_SECRET }}
             X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}

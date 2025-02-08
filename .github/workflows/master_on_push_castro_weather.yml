@@ -27,6 +27,6 @@ jobs:
 
       - name: Run Script
         env:
-            STATION_ID: ${{ secrets.STATION_ID }}
-            API_KEY: ${{ secrets.API_KEY }}
+            STATION_ID: ${{ secrets.WEATHER_UNDERGROUND_STATION_ID }}
+            API_KEY: ${{ secrets.WEATHER_UNDERGROUND_API_KEY }}
         run: python ./src/weather-station/morning_daily_scheduler.py
