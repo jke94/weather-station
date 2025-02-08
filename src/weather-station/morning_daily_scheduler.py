@@ -12,7 +12,7 @@ def main(station_id:str, api_key:str, date:str) -> int:
     
     if not station_id or not api_key:
 
-        print({"error" : "The environment variables STATION_ID and API_KEY must be defined as environment variables or passed as arguments."})
+        print({"error" : "The environment variables WEATHER_UNDERGROUND_STATION_ID and WEATHER_UNDERGROUND_API_KEY must be defined as environment variables or passed as arguments."})
         return -1
     
     # Call to the weather service to get the data inyecting functions.
@@ -57,4 +57,8 @@ if __name__ == "__main__":
     yesterday = datetime.now() - timedelta(days=1)
     yesterday_formatted_date = yesterday.strftime("%Y%m%d")
 
-    result = main(weather_underground_station_id, weather_underground_api_key, yesterday_formatted_date)
+    result = main(
+        station_id=weather_underground_station_id, 
+        api_key=weather_underground_api_key, 
+        date=yesterday_formatted_date
+    )
