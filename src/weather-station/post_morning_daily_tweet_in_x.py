@@ -10,7 +10,8 @@ from services.weather_service import deserialize_weather_data_real
 
 from services.twitter_service import TwitterService
 from services.twitter_service import build_tweet
-from services.twitter_service import create_tweet
+
+from services.twitter_create_post_service import create_tweet
 
 def main(
     weather_underground_station_id:str,
@@ -58,32 +59,21 @@ def main(
     print(weather_day_summary_report.model_dump_json(indent=4))
 
     # Call to Twitter (or also called X) service to build tweet content.
-    twitter_service = TwitterService(
-        build_tweet=build_tweet,
-        create_tweet=create_tweet
-    )
+    twitter_service = TwitterService(create_tweet, build_tweet)
 
-    tweet_message = twitter_service.build_tweet(weather_day_summary_report)
-
-    # Development: Show tweet info.
-    print('Tweet content --------------------------------------')
-    print(tweet_message)
-    print('--------------------------------------')
-    print(f'Tweet length: {len(tweet_message)}')
-
-    tweet_url = twitter_service.create_tweet(
+    tweet = twitter_service.post_weather_report(
         api_key_for_x,
         api_key_secret_for_x,
         access_token_for_x,
         access_secret_token_for_x,
-        tweet_message
+        weather_day_summary_report
     )
 
-    if tweet_url == "NONE":
+    if tweet == "NONE":
         print("Error in create tweet process!")
         return -3
-    
-    print(f'Created tweet: {tweet_url}')
+
+    print(f'Created tweet: {tweet}')
 
     return 0
 

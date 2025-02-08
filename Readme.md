@@ -1,26 +1,28 @@
 # weather-station
 
+[![On push master morning_daily_scheduler.py](https://github.com/jke94/weather-station/actions/workflows/master_on_push_morning_daily_scheduler.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/master_on_push_morning_daily_scheduler.yml)
+
+[![Morning daily scheduler yesterday tweet in X (Twitter) at 09h UTC](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler_tweet_in_X.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler_tweet_in_X.yml)
+
+[![Morning daily scheduler yesterday report 09h UTC](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler.yml)
+
+## Description
+
 Weather station automatization reports using with Github Actions and X (also knowing as Twitter in the past) daily report publication process. 
 
 The information is obtained from [Weather Underground](https://www.wunderground.com/) platform. Launching HTTP request over the Web API to get information about the weather information sent by our weather station.
 
-Finally it´s reported in X platform [
-⛅Tiempo Castrocontrigo](https://x.com/Castro_tiempo)✌️
+Finally it´s reported in X platform:
+
+- X (Twitter) profile: [⛅Tiempo Castrocontrigo](https://x.com/Castro_tiempo)✌️
+
+Here, a picture about the weather station 📸
 
 <p align="center">
   <img src="https://github.com/jke94/weather-station/blob/master/images/profile_photo_weather_station.jpg" 
   alt="Weather station photo" 
   style="max-width:450px; max-height:450px; height:auto;">
 </p>
-
-Github action status:
-
-- [![On push master morning_daily_scheduler.py](https://github.com/jke94/weather-station/actions/workflows/master_on_push_morning_daily_scheduler.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/master_on_push_morning_daily_scheduler.yml)
-
-- [![Morning daily scheduler yesterday tweet in X (Twitter) at 09h UTC](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler_tweet_in_X.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler_tweet_in_X.yml)
-
-- [![Morning daily scheduler yesterday report 09h UTC](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler.yml)
-
 
 ## How to run
 

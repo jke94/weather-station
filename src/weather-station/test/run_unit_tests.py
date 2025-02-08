@@ -2,10 +2,10 @@ import unittest
 import sys
 import os
 
-# Obtener la ruta absoluta del directorio actual (donde está run_unit_tests.py)
+# Get the absolute path of the current directory (where run_unit_tests.py is)
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Agregar al sys.path el directorio 'weather-station' (dos niveles arriba)
+# Add the 'weather-station' directory to the sys.path (two levels up)
 PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, ".."))
 sys.path.insert(0, PROJECT_ROOT)
 
