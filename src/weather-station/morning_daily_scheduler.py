@@ -38,17 +38,25 @@ def main(station_id:str, api_key:str, date:str) -> int:
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Obtain weather data.")
-    parser.add_argument("--station_id", type=str, help="Weather station ID.")
-    parser.add_argument("--api_key", type=str, help="API Key para acceder a los datos.")
+    parser.add_argument("--weather_underground_station_id", 
+                        type=str, 
+                        help="Weather Underground station ID.", 
+                        required=True
+    )
+    parser.add_argument("--weather_underground_api_key", 
+                        type=str, 
+                        help="Weather Underground api Key.", 
+                        required=True
+    )
 
     args = parser.parse_args()
 
     # Priority: command line arguments > environment variables
 
-    station_id = args.station_id or os.getenv("STATION_ID")
-    api_key = args.api_key or os.getenv("API_KEY")
+    weather_underground_station_id = args.weather_underground_station_id or os.getenv("WEATHER_UNDERGROUND_STATION_ID")
+    weather_underground_api_key = args.weather_underground_api_key or os.getenv("WEATHER_UNDERGROUND_API_KEY")
     
     yesterday = datetime.now() - timedelta(days=1)
     yesterday_formatted_date = yesterday.strftime("%Y%m%d")
 
-    result = main(station_id, api_key, yesterday_formatted_date)
+    result = main(weather_underground_station_id, weather_underground_api_key, yesterday_formatted_date)
