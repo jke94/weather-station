@@ -32,8 +32,8 @@ Note: **scripts using by default environment variables** but, you can use also i
 
 ```
 python .\src\weather-station\test\morning_daily_scheduler.py `
-    --station_id <WEATHER_UNDERGROUND_STATION_ID> `
-    --api_key <WEATHER_UNDERGROUND_API_KEY> 
+    --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
+    --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> 
 ```
 
 2. Get report from previous day and publish tweet in X (Twitter) platform.
