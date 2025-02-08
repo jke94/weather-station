@@ -10,7 +10,7 @@ Finally it´s reported in X platform [
 <p align="center">
   <img src="https://github.com/jke94/weather-station/blob/master/images/profile_photo_weather_station.jpg" 
   alt="Weather station photo" 
-  style="max-width:50%; height:auto;">
+  style="max-width:150px; max-height:150px; height:auto;">
 </p>
 
 Github actio status:
