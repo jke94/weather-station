@@ -44,7 +44,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("--weather_underground_api_key", 
                         type=str, 
-                        help="Weather Underground api Key."
+                        help="Weather Underground api key."
     )
 
     args = parser.parse_args()
