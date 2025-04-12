@@ -71,3 +71,7 @@ python .\src\weather-station\test\run_unit_tests.py
 
 - [Crontab guru](https://crontab.guru/#*/10_*_*_*_*)
 - [X Developer portal](https://developer.twitter.com/en/portal/projects-and-apps)
+
+### Facebook
+
+- [Facebook developers: Getting started](https://developers.facebook.com/docs/pages-api/getting-started/)
