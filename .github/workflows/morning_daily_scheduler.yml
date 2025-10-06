@@ -2,7 +2,7 @@ name: Morning daily scheduler yesterday report 09h UTC
 
 on:
   schedule:
-    - cron: '00 07 * * *'  # Running at 09:00 CEST (Spanish summer time) which is 07:00 UTC
+    - cron: '30 07 * * *'  # Running at 09:30 CEST (Spanish summer time) which is 07:30 UTC
 
 jobs:
   fetch_weather:
