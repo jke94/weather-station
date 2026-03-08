@@ -1,6 +1,6 @@
 # weather-station
 
-[![On push master morning_daily_scheduler.py](https://github.com/jke94/weather-station/actions/workflows/master_on_push_morning_daily_scheduler.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/master_on_push_morning_daily_scheduler.yml)
+[![On push master morning_daily_scheduler_on_x.py](https://github.com/jke94/weather-station/actions/workflows/master_on_push_morning_daily_scheduler.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/master_on_push_morning_daily_scheduler.yml)
 
 [![Morning daily scheduler yesterday tweet in X (Twitter) at 09h UTC](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler_tweet_in_X.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler_tweet_in_X.yml)
 
@@ -44,7 +44,7 @@ Note: **scripts using by default environment variables** but, you can use also i
 1. Get report about weather station and print in console.
 
 ```
-python .\src\weather-station\test\morning_daily_scheduler.py `
+python .\src\weather-station\test\morning_daily_scheduler_on_x.py `
     --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
     --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> 
 ```
