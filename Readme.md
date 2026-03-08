@@ -61,6 +61,34 @@ python .\src\weather-station\post_morning_daily_tweet_in_x.py `
     --x_access_secret_token <X_ACCESS_SECRET_TOKEN>
 ```
 
+3. Get report from previous day and publish post in Facebook platform.
+
+> [!NOTE]
+> Meta (Facebook) requires generate a _Long-live-token_ that expires after 60 days: use `generate_facebook_long_lived_token.py` script.
+
+```
+python .\src\weather-station\post_morning_daily_post_in_facebook.py `
+    --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
+    --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> `
+    --facebook_access_token <FACEBOOK_ACCESS_TOKEN> `
+    --facebook_page_id <FACEBOOK_PAGE_ID>
+```
+
+How to use `generate_facebook_long_lived_token.py` python script:
+
+```
+python generate_long_lived_token.py `
+  --app_id <FACEBOOK_APP_ID> `
+  --app_secret <FACEBOOK_SECRET_APP> `
+  --short_token <FACEBOOK_SHORT_TOKEN>
+```
+
+- For `app_id` and `app_secret` go to `https://developers.facebook.com/`, go to My Apps, select the app and go to app configuration. On `basic` you can get this data.
+
+- For `short_token` use the `GET /me/accounts` end-point over _Graph API Explorer_ and get `access_token` value.
+
+- Page Id value also can be capture from `GET /me/accounts` response.
+
 ## Run unit tests
 
 ```
