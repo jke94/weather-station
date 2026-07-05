@@ -20,7 +20,7 @@ python -m venv venv
 pip install -r .\requirements.txt
 ```
 
-# Python Code Guidelines
+## Python Code Guidelines
 
 These guidelines are intentionally concise and align with recommendations from the Python documentation and commonly accepted standards such as PEP 8 and PEP 20.
 
