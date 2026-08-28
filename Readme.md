@@ -12,16 +12,19 @@ Weather station automatization reports using with Github Actions and X (also kno
 
 The information is obtained from [Weather Underground](https://www.wunderground.com/) platform. Launching HTTP request over the Web API to get information about the weather information sent by our weather station.
 
-Finally it´s reported in X platform:
+Finally, reports are published on these platforms:
 
-- X (Twitter) profile: [⛅Tiempo Castrocontrigo](https://x.com/Castro_tiempo)✌️
+| Platform | Profile | Link |
+| --- | --- | --- |
+| X (Twitter) | ⛅Tiempo Castrocontrigo | [Visit profile](https://x.com/Castro_tiempo) |
+| Facebook | ⛅Tiempo Castrocontrigo | [Visit page](https://www.facebook.com/profile.php?id=61588289686123) |
 
 Here, a picture about the weather station 📸
 
 <p align="center">
-  <img src="https://github.com/jke94/weather-station/blob/master/images/profile_photo_weather_station.jpg" 
-  alt="Weather station photo" 
-  style="max-width:450px; max-height:450px; height:auto;">
+  <img src="./images/profile_photo_weather_station.jpg"
+    alt="Weather station photo"
+    width="450">
 </p>
 
 ## How to run
@@ -77,7 +80,7 @@ python .\src\weather-station\post_morning_daily_post_in_facebook.py `
 How to use `generate_facebook_long_lived_token.py` python script:
 
 ```
-python generate_long_lived_token.py `
+python generate_facebook_long_lived_token.py `
   --app_id <FACEBOOK_APP_ID> `
   --app_secret <FACEBOOK_SECRET_APP> `
   --short_token <FACEBOOK_SHORT_TOKEN>
