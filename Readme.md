@@ -36,18 +36,18 @@ python -m venv venv
 ```
 
 ```
-.\venv\Scripts\activate
+./venv/Scripts/activate
 ```
 
 ```
-pip install -r .\requirements.txt
+pip install -r requirements.txt
 ```
 Note: **scripts using by default environment variables** but, you can use also input arguments.
 
 1. Get report about weather station and print in console.
 
 ```
-python .\src\weather-station\test\morning_daily_scheduler_on_x.py `
+python src/weather-station/test/morning_daily_scheduler_on_x.py `
     --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
     --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> 
 ```
@@ -55,7 +55,7 @@ python .\src\weather-station\test\morning_daily_scheduler_on_x.py `
 2. Get report from previous day and publish tweet in X (Twitter) platform.
 
 ```
-python .\src\weather-station\post_morning_daily_tweet_in_x.py `
+python src/weather-station/post_morning_daily_tweet_in_x.py `
     --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
     --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> `
     --x_api_key <X_API_KEY> `
@@ -70,7 +70,7 @@ python .\src\weather-station\post_morning_daily_tweet_in_x.py `
 > Meta (Facebook) requires generate a _Long-live-token_ that expires after 60 days: use `generate_facebook_long_lived_token.py` script.
 
 ```
-python .\src\weather-station\post_morning_daily_post_in_facebook.py `
+python src/weather-station/post_morning_daily_post_in_facebook.py `
     --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
     --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> `
     --facebook_access_token <FACEBOOK_ACCESS_TOKEN> `
@@ -80,7 +80,7 @@ python .\src\weather-station\post_morning_daily_post_in_facebook.py `
 How to use `generate_facebook_long_lived_token.py` python script:
 
 ```
-python generate_facebook_long_lived_token.py `
+python src/utils/generate_facebook_long_lived_token.py `
   --app_id <FACEBOOK_APP_ID> `
   --app_secret <FACEBOOK_SECRET_APP> `
   --short_token <FACEBOOK_SHORT_TOKEN>
@@ -95,7 +95,7 @@ python generate_facebook_long_lived_token.py `
 ## Run unit tests
 
 ```
-python .\src\weather-station\test\run_unit_tests.py
+python ./src/weather-station/test/run_unit_tests.py
 ```
 
 ## Useful information used to build this project.
