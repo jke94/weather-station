@@ -24,12 +24,6 @@ jobs:
 
       - name: Run Unit Tests
         run: python ./src/weather-station/test/run_unit_tests.py
-  
-      - name: Run morning daily scheduler script.
-        env:
-            STATION_ID: ${{ secrets.WEATHER_UNDERGROUND_STATION_ID }}
-            API_KEY: ${{ secrets.WEATHER_UNDERGROUND_API_KEY }}
-        run: python ./src/weather-station/morning_daily_scheduler_on_x.py
 
       - name: Run morning daily scheduler post in Facebook script.
         env:
