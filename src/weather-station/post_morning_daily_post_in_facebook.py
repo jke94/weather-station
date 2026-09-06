@@ -113,4 +113,5 @@ if __name__ == "__main__":
     )
 
     print(f'Main result value: {result}')
+    raise SystemExit(result)
 
