@@ -88,7 +88,7 @@ python src/utils/generate_facebook_long_lived_token.py `
 
 - For `app_id` and `app_secret` go to `https://developers.facebook.com/`, go to My Apps, select the app and go to app configuration. On `basic` you can get this data.
 
-- For `short_token` use the `GET /me/accounts` end-point over _Graph API Explorer_ and get `access_token` value.
+- For `short_token` use the `GET /me/accounts` end-point over _Graph API Explorer_ and get `access_token` and `data``id` value.
 
 - Page Id value also can be capture from `GET /me/accounts` response.
 
@@ -101,4 +101,5 @@ python ./src/weather-station/test/run_unit_tests.py
 ## Useful information used to build this project.
 
 - [Crontab guru](https://crontab.guru/#*/10_*_*_*_*)
-- [X Developer portal](https://developer.twitter.com/en/portal/projects-and-apps)
+- [X developer portal](https://developer.twitter.com/en/portal/projects-and-apps)
+- [Facebook developers portal](https://developers.facebook.com)
