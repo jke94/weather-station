@@ -4,7 +4,7 @@
 
 [![Morning daily scheduler yesterday tweet in X (Twitter) at 09h UTC](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler_tweet_in_X.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler_tweet_in_X.yml)
 
-[![Morning daily scheduler yesterday report 09h UTC](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler.yml/badge.svg)](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler.yml)
+[![Morning daily scheduler yesterday post in Facebook at 09h UTC](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler_tweet_in_facebook.yml/badge.svg?branch=master)](https://github.com/jke94/weather-station/actions/workflows/morning_daily_scheduler_tweet_in_facebook.yml)
 
 ## Description
 
