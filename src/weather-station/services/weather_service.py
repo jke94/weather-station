@@ -69,13 +69,16 @@ class WeatherService:
             )
 
         except requests.exceptions.RequestException as e:
-            return {"error": f"HTTP request failed: {e}"}
+            print({"error": f"HTTP request failed: {e}"})
+            return None
 
-        except ValueError:
-            return {"error": "Error al procesar los datos JSON."}
+        except ValueError as e:
+            print({"error": f"Error al procesar los datos JSON: {e}"})
+            return None
 
         except jsonschema.exceptions.ValidationError as e:
-            return {"error": f"JSON Schema validation failed: {e}"}
+            print({"error": f"JSON Schema validation failed: {e}"})
+            return None
         
 def fetch_data_real(url: str) -> dict:
 
