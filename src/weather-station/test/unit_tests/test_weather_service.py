@@ -1,5 +1,11 @@
 import unittest
+from contextlib import redirect_stdout
+from io import StringIO
 from unittest.mock import MagicMock
+
+import jsonschema
+import requests
+
 from services.weather_service import WeatherService
 from model.report.weather_day_summary_report import WeatherDaySummaryReport
 from model.pws.history.daily.weather_response import WeatherResponse
@@ -101,3 +107,38 @@ class TestWeatherService(unittest.TestCase):
         self.assertEqual(report.UvHighRisk, "Medium")
         self.assertEqual(report.UvIndexHigh, 5.0)
         self.assertEqual(report.SolarRadiationHigh, 460.1)
+
+    def assert_service_error_returns_none(
+        self, failing_mock, error, expected_message
+    ):
+        failing_mock.side_effect = error
+        output = StringIO()
+
+        with redirect_stdout(output):
+            report = self.weather_service.build_weather_day_summary_report(
+                "TEST123", "FAKE_API_KEY", "20240203"
+            )
+
+        self.assertIsNone(report)
+        self.assertIn(expected_message, output.getvalue())
+
+    def test_request_error_returns_none_and_reports_error(self):
+        self.assert_service_error_returns_none(
+            self.mock_fetch_data,
+            requests.exceptions.RequestException("network unavailable"),
+            "HTTP request failed: network unavailable",
+        )
+
+    def test_value_error_returns_none_and_reports_error(self):
+        self.assert_service_error_returns_none(
+            self.mock_fetch_data,
+            ValueError("invalid response"),
+            "Error al procesar los datos JSON: invalid response",
+        )
+
+    def test_schema_error_returns_none_and_reports_error(self):
+        self.assert_service_error_returns_none(
+            self.mock_validate_json,
+            jsonschema.exceptions.ValidationError("invalid schema"),
+            "JSON Schema validation failed: invalid schema",
+        )
