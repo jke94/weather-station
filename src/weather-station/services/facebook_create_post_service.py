@@ -33,7 +33,26 @@ def create_post(
 
         return created_post_url
 
-    except Exception as error:
-        
-        print({'error': f"Create post HTTP status code: {error}"})
+    except requests.exceptions.HTTPError as error:
+        error_response = error.response
+        if error_response is None:
+            print({'error': f"Facebook Graph API request failed: {error}"})
+        else:
+            try:
+                error_details = error_response.json()
+            except ValueError:
+                error_details = error_response.text
+
+            print({
+                'error': (
+                    'Facebook Graph API returned HTTP '
+                    f'{error_response.status_code}'
+                ),
+                'details': error_details
+            })
+
+        return created_post_url
+
+    except requests.exceptions.RequestException as error:
+        print({'error': f"Facebook Graph API request failed: {error}"})
         return created_post_url

@@ -68,6 +68,9 @@ python src/weather-station/post_morning_daily_tweet_in_x.py `
 
 > [!NOTE]
 > Meta (Facebook) requires generate a _Long-live-token_ that expires after 60 days: use `generate_facebook_long_lived_token.py` script.
+> If publishing fails, the workflow logs the Graph API response details alongside
+> the HTTP status. Check the returned error message and code before changing the
+> token or Page configuration; never share access tokens in logs or reports.
 
 ```
 python src/weather-station/post_morning_daily_post_in_facebook.py `
