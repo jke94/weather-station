@@ -67,7 +67,10 @@ python src/weather-station/post_morning_daily_tweet_in_x.py `
 3. Get report from previous day and publish post in Facebook platform.
 
 > [!NOTE]
-> Meta (Facebook) requires generate a _Long-live-token_ that expires after 60 days: use `generate_facebook_long_lived_token.py` script.
+> Use `generate_facebook_long_lived_token.py` to exchange a short-lived user
+> token for a long-lived user token. Token lifetime depends on Meta's policies
+> and the token's permissions; check the returned expiration rather than
+> assuming a fixed duration.
 > If publishing fails, the workflow logs the Graph API response details alongside
 > the HTTP status. Check the returned error message and code before changing the
 > token or Page configuration; never share access tokens in logs or reports.
@@ -80,7 +83,7 @@ python src/weather-station/post_morning_daily_post_in_facebook.py `
     --facebook_page_id <FACEBOOK_PAGE_ID>
 ```
 
-How to use `generate_facebook_long_lived_token.py` python script:
+How to use `generate_facebook_long_lived_token.py`:
 
 ```
 python src/utils/generate_facebook_long_lived_token.py `
@@ -89,11 +92,12 @@ python src/utils/generate_facebook_long_lived_token.py `
   --short_token <FACEBOOK_SHORT_TOKEN>
 ```
 
-- For `app_id` and `app_secret` go to `https://developers.facebook.com/`, go to My Apps, select the app and go to app configuration. On `basic` you can get this data.
+- For `app_id` and `app_secret`, open `https://developers.facebook.com/`, select **My Apps**, choose the app, and open **App settings → Basic**. The App ID and App Secret must be from the same app.
 
-- For `short_token` use the `GET /me/accounts` end-point over _Graph API Explorer_ and get `access_token` and `data``id` value.
+- Generate `short_token` in **Graph API Explorer** with this same app selected. It must be a short-lived **user** access token with the permissions needed to access the Page. Do not use the Page token returned by `/me/accounts` as the short token for this exchange.
 
-- Page Id value also can be capture from `GET /me/accounts` response.
+- After the exchange, use `GET /me/accounts?fields=id,name,access_token` with the long-lived user token to retrieve the Page ID and Page access token. Use the Page access token for publishing.
+- Keep the App Secret and all access tokens private. Do not commit them, paste them into issues, or include them in logs. The script accepts the values as command-line arguments or from `FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`, and `FACEBOOK_SHORT_TOKEN` environment variables.
 
 ## Run unit tests
 
