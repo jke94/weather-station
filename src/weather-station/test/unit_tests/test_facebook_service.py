@@ -45,52 +45,27 @@ class TestFacebookService(unittest.TestCase):
         )
 
     def test_build_post_generates_correct_message(self):
-
-        # Arrange
-        expected_values = [
-            f"¡Buenos días Castrocontrigo!",
-            f"Resumen de ayer 📅 {self.weather_report.Date}",
-            f"🌡️ Temperatura (ºC):",
-            f"Max. {self.weather_report.TemperatureHigh} | "
-            f"Min. {self.weather_report.TemperatureLow} | "
-            f"Media. {self.weather_report.TemperatureAvg}",
-            f"🥶 Sensación térmica (ºC):",
-            f"Max. {self.weather_report.WindChillHigh} | "
-            f"Min. {self.weather_report.WindChillLow} | "
-            f"Media. {self.weather_report.WindChillAvg}",
-            f"🔥 Índice de calor (ºC):",
-            f"Max. {self.weather_report.HeatIndexHigh} | "
-            f"Min. {self.weather_report.HeatIndexLow} | "
-            f"Media. {self.weather_report.HeatIndexAvg}",
-            f"💧 Humedad (%):",
-            f"Max. {self.weather_report.HumidityHigh} | "
-            f"Min. {self.weather_report.HumidityLow} | "
-            f"Media. {self.weather_report.HumidityAvg}",
-            f"🌧️ Punto de rocío (ºC):",
-            f"Max. {self.weather_report.DewPointHigh} | "
-            f"Min. {self.weather_report.DewPointLow} | "
-            f"Media. {self.weather_report.DewPointAvg}",
-            f"☔ Precipitación: {self.weather_report.PrecipitationTotal} L/m²",
-            f"💨 Viento:",
-            f"Medio: {self.weather_report.WindSpeedAvg} km/h | "
-            f"Máx. {self.weather_report.WindSpeedHigh} km/h | "
-            f"Racha máx.: {self.weather_report.WindGustHigh} km/h",
-            f"Racha media: {self.weather_report.WindGustAvg} km/h",
-            f"Dirección media: {self.weather_report.WindDirectionAvg}",
-            f"🔽 Presión (mb): Máx. {self.weather_report.PressureMax} | "
-            f"Mín. {self.weather_report.PressureMin}",
-            f"☀️ Índice UV máx.: {self.weather_report.UvIndexHigh} "
-            f"({translate_to_spanish_uv_risk(self.weather_report.UvHighRisk)})",
-            f"😎 Radiación solar máx.: {self.weather_report.SolarRadiationHigh} W/m²"
-        ]
-
-        # Act
         post = build_post(self.weather_report)
 
-        # Assert
-        for value in expected_values:
-            with self.subTest(value=value):
-                self.assertIn(value, post)
+        expected_post = (
+            "⛅ Castrocontrigo · Resumen de ayer (15/03/2024)\n\n"
+            "🌡️ Temperatura: 22,8 °C máx. · 15,3 °C media · 8,9 °C mín.\n"
+            "🥶 Sensación térmica: 22,8 °C máx. · 15,3 °C media · "
+            "8,9 °C mín.\n"
+            "🔥 Índice de calor: 22,8 °C máx. · 15,3 °C media · "
+            "8,9 °C mín.\n\n"
+            "💧 Humedad: 85 % máx. · 58,3 % media · 35 % mín.\n"
+            "🌧️ Precipitación: 3,2 mm\n"
+            "💨 Viento: 15,2 km/h máx. · 8,3 km/h media\n"
+            "   Racha máx.: 22,1 km/h · Dirección media: SSW\n"
+            "🌫️ Punto de rocío: 12,5 °C máx. · 8,6 °C media · "
+            "4,2 °C mín.\n\n"
+            "🔽 Presión: 1015,77 hPa máx. · 1010,45 hPa mín.\n"
+            "☀️ UV máx.: 7,5 (Alto) · "
+            "Radiación solar máx.: 680,4 W/m²"
+        )
+
+        self.assertEqual(post, expected_post)
 
     def test_post_weather_report_calls_create_post_correctly(self):
         """Act: Call `post_weather_report`. Assert: Validate call to `create_post`."""
