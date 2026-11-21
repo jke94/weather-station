@@ -8,6 +8,12 @@ class WeatherDaySummaryReport(BaseModel):
     DewPointHigh: float
     DewPointLow: float
     DewPointAvg: float
+    WindChillHigh: float
+    WindChillLow: float
+    WindChillAvg: float
+    HeatIndexHigh: float
+    HeatIndexLow: float
+    HeatIndexAvg: float
     HumidityHigh: float
     HumidityLow: float
     HumidityAvg: float

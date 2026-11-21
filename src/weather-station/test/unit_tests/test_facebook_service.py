@@ -17,6 +17,12 @@ class TestFacebookService(unittest.TestCase):
             DewPointHigh=12.5,
             DewPointLow=4.2,
             DewPointAvg=8.6,
+            WindChillHigh=22.8,
+            WindChillLow=8.9,
+            WindChillAvg=15.3,
+            HeatIndexHigh=22.8,
+            HeatIndexLow=8.9,
+            HeatIndexAvg=15.3,
             HumidityHigh=85.0,
             HumidityLow=35.0,
             HumidityAvg=58.3,
@@ -48,6 +54,14 @@ class TestFacebookService(unittest.TestCase):
             f"Max. {self.weather_report.TemperatureHigh} | "
             f"Min. {self.weather_report.TemperatureLow} | "
             f"Media. {self.weather_report.TemperatureAvg}",
+            f"🥶 Sensación térmica (ºC):",
+            f"Max. {self.weather_report.WindChillHigh} | "
+            f"Min. {self.weather_report.WindChillLow} | "
+            f"Media. {self.weather_report.WindChillAvg}",
+            f"🔥 Índice de calor (ºC):",
+            f"Max. {self.weather_report.HeatIndexHigh} | "
+            f"Min. {self.weather_report.HeatIndexLow} | "
+            f"Media. {self.weather_report.HeatIndexAvg}",
             f"💧 Humedad (%):",
             f"Max. {self.weather_report.HumidityHigh} | "
             f"Min. {self.weather_report.HumidityLow} | "

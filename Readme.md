@@ -19,6 +19,10 @@ Finally, reports are published on these platforms:
 | X (Twitter) | ⛅Tiempo Castrocontrigo | [Visit profile](https://x.com/Castro_tiempo) |
 | Facebook | ⛅Tiempo Castrocontrigo | [Visit page](https://www.facebook.com/profile.php?id=61588289686123) |
 
+The Facebook daily post includes temperature, wind chill (sensible temperature),
+heat index, humidity, dew point, precipitation, wind, pressure, UV index, and
+solar radiation from the PWS daily history.
+
 Here, a picture about the weather station 📸
 
 <p align="center">
