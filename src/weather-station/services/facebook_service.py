@@ -1,6 +1,8 @@
+from datetime import datetime
 from typing import Callable
 
 from model.report.weather_day_summary_report import WeatherDaySummaryReport
+
 
 def translate_to_spanish_uv_risk(uv_risk: str) -> str:
     translation = {
@@ -12,36 +14,55 @@ def translate_to_spanish_uv_risk(uv_risk: str) -> str:
     }
     return translation.get(uv_risk, "NONE")
 
+
+def _format_number(value: float) -> str:
+    return f"{value:g}".replace(".", ",")
+
+
 def build_post(weather_day_summary_report: WeatherDaySummaryReport) -> str:
+    report = weather_day_summary_report
+    formatted_date = datetime.strptime(report.Date, "%Y-%m-%d").strftime(
+        "%d/%m/%Y"
+    )
 
     return (
-        f"¡Buenos días Castrocontrigo!\n"
-        f"Resumen de ayer 📅 {weather_day_summary_report.Date}:\n\n"
-        f"🌡️ Temperatura (ºC):\n"
-        f"   Max. {weather_day_summary_report.TemperatureHigh} | "
-        f"Min. {weather_day_summary_report.TemperatureLow} | "
-        f"Media. {weather_day_summary_report.TemperatureAvg}\n\n"
-        f"💧 Humedad (%):\n"
-        f"   Max. {weather_day_summary_report.HumidityHigh} | "
-        f"Min. {weather_day_summary_report.HumidityLow} | "
-        f"Media. {weather_day_summary_report.HumidityAvg}\n\n"
-        f"🌧️ Punto de rocío (ºC):\n"
-        f"   Max. {weather_day_summary_report.DewPointHigh} | "
-        f"Min. {weather_day_summary_report.DewPointLow} | "
-        f"Media. {weather_day_summary_report.DewPointAvg}\n\n"
-        f"☔ Precipitación: {weather_day_summary_report.PrecipitationTotal} L/m²\n\n"
-        f"💨 Viento:\n"
-        f"   Medio: {weather_day_summary_report.WindSpeedAvg} km/h | "
-        f"Máx. {weather_day_summary_report.WindSpeedHigh} km/h | "
-        f"Racha máx.: {weather_day_summary_report.WindGustHigh} km/h\n"
-        f"   Racha media: {weather_day_summary_report.WindGustAvg} km/h\n"
-        f"   Dirección media: {weather_day_summary_report.WindDirectionAvg}\n\n"
-        f"🔽 Presión (mb): Máx. {weather_day_summary_report.PressureMax} | "
-        f"Mín. {weather_day_summary_report.PressureMin}\n\n"
-        f"☀️ Índice UV máx.: {weather_day_summary_report.UvIndexHigh} "
-        f"({translate_to_spanish_uv_risk(weather_day_summary_report.UvHighRisk)})\n\n"
-        f"😎 Radiación solar máx.: {weather_day_summary_report.SolarRadiationHigh} W/m²"
+        f"⛅ Castrocontrigo · Resumen de ayer ({formatted_date})\n\n"
+        f"🌡️ Temperatura: "
+        f"{_format_number(report.TemperatureHigh)} °C máx. · "
+        f"{_format_number(report.TemperatureAvg)} °C media · "
+        f"{_format_number(report.TemperatureLow)} °C mín.\n"
+        f"🥶 Sensación térmica: "
+        f"{_format_number(report.WindChillHigh)} °C máx. · "
+        f"{_format_number(report.WindChillAvg)} °C media · "
+        f"{_format_number(report.WindChillLow)} °C mín.\n"
+        f"🔥 Índice de calor: "
+        f"{_format_number(report.HeatIndexHigh)} °C máx. · "
+        f"{_format_number(report.HeatIndexAvg)} °C media · "
+        f"{_format_number(report.HeatIndexLow)} °C mín.\n\n"
+        f"💧 Humedad: "
+        f"{_format_number(report.HumidityHigh)} % máx. · "
+        f"{_format_number(report.HumidityAvg)} % media · "
+        f"{_format_number(report.HumidityLow)} % mín.\n"
+        f"🌧️ Precipitación: "
+        f"{_format_number(report.PrecipitationTotal)} mm\n"
+        f"💨 Viento: "
+        f"{_format_number(report.WindSpeedHigh)} km/h máx. · "
+        f"{_format_number(report.WindSpeedAvg)} km/h media\n"
+        f"   Racha máx.: {_format_number(report.WindGustHigh)} km/h · "
+        f"Dirección media: {report.WindDirectionAvg}\n"
+        f"🌫️ Punto de rocío: "
+        f"{_format_number(report.DewPointHigh)} °C máx. · "
+        f"{_format_number(report.DewPointAvg)} °C media · "
+        f"{_format_number(report.DewPointLow)} °C mín.\n\n"
+        f"🔽 Presión: "
+        f"{_format_number(report.PressureMax)} hPa máx. · "
+        f"{_format_number(report.PressureMin)} hPa mín.\n"
+        f"☀️ UV máx.: {_format_number(report.UvIndexHigh)} "
+        f"({translate_to_spanish_uv_risk(report.UvHighRisk)}) · "
+        f"Radiación solar máx.: "
+        f"{_format_number(report.SolarRadiationHigh)} W/m²"
     )
+
 
 class FacebookService:
     def __init__(
