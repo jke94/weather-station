@@ -1,127 +1,152 @@
 import argparse
-import os
+from functools import partial
 
-from datetime import datetime, timedelta
+from weather_station.business_logic.report_date import previous_report_date
+from weather_station.config import AppConfig
+from weather_station.services.publishing_state import PublicationStateStore
+from weather_station.services.twitter_create_post_service import create_tweet
+from weather_station.services.twitter_service import (
+    TwitterService,
+    build_tweet,
+)
+from weather_station.services.weather_service import (
+    WeatherService,
+    deserialize_weather_data_real,
+    fetch_data_real,
+    validate_json_real,
+)
 
-from services.weather_service import WeatherService
-from services.weather_service import fetch_data_real
-from services.weather_service import validate_json_real
-from services.weather_service import deserialize_weather_data_real
-
-from services.twitter_service import TwitterService
-from services.twitter_service import build_tweet
-
-from services.twitter_create_post_service import create_tweet
 
 def main(
-    weather_underground_station_id:str,
-    weather_underground_api_key:str,
-    api_key_for_x:str,
-    api_key_secret_for_x:str,
-    access_token_for_x:str,
-    access_secret_token_for_x:str,
-    date:str
+    weather_underground_station_id: str | None,
+    weather_underground_api_key: str | None,
+    api_key_for_x: str | None,
+    api_key_secret_for_x: str | None,
+    access_token_for_x: str | None,
+    access_secret_token_for_x: str | None,
+    date: str,
+    config: AppConfig | None = None,
+    retry_unresolved_publication: bool = False,
 ) -> int:
-
-    # Input functions parameter validation
+    config = config or AppConfig.from_sources({
+        "WEATHER_UNDERGROUND_STATION_ID": weather_underground_station_id,
+        "WEATHER_UNDERGROUND_API_KEY": weather_underground_api_key,
+        "X_API_KEY": api_key_for_x,
+        "X_API_KEY_SECRET": api_key_secret_for_x,
+        "X_ACCESS_TOKEN": access_token_for_x,
+        "X_ACCESS_SECRET_TOKEN": access_secret_token_for_x,
+    })
     if not weather_underground_station_id or not weather_underground_api_key:
-
-        error = {
-                "error" : """The environment variables 
-                    WEATHER_UNDERGROUND_STATION_ID and WEATHER_UNDERGROUND_API_KEY 
-                    must be defined as environment variables or passed as arguments."""
-                }
-
-        print(error)
-            
+        print(
+            "WEATHER_UNDERGROUND_STATION_ID and "
+            "WEATHER_UNDERGROUND_API_KEY must be configured."
+        )
+        return -1
+    if (
+        not api_key_for_x
+        or not api_key_secret_for_x
+        or not access_token_for_x
+        or not access_secret_token_for_x
+    ):
+        print(
+            "X_API_KEY, X_API_KEY_SECRET, X_ACCESS_TOKEN, and "
+            "X_ACCESS_SECRET_TOKEN must be configured."
+        )
         return -1
 
-    # Call to the weather service to get the data inyecting functions.
     weather_service = WeatherService(
-        fetch_data=fetch_data_real,
+        fetch_data=partial(fetch_data_real, config=config),
         validate_json=validate_json_real,
-        deserialize_weather_data=deserialize_weather_data_real
+        deserialize_weather_data=deserialize_weather_data_real,
     )
-
-    # Get report
-    weather_day_summary_report = weather_service.build_weather_day_summary_report(
-        weather_underground_station_id, 
-        weather_underground_api_key, 
-        date
+    report = weather_service.build_weather_day_summary_report(
+        weather_underground_station_id,
+        weather_underground_api_key,
+        date,
     )
-
-    if weather_day_summary_report == None:
-        
-        print({"error" : "Error trying to get data."})
+    if report is None:
+        print({"error": "Error trying to get data."})
         return -2
 
-    print('DATA API -------------------------------------------')
-    print(weather_day_summary_report.model_dump_json(indent=4))
+    publication_state = PublicationStateStore(
+        path=config.publishing_state_path
+    )
+    if retry_unresolved_publication:
+        publication_state.clear_unresolved(
+            "x", weather_underground_station_id, date
+        )
+    state = publication_state.reserve(
+        "x", weather_underground_station_id, date
+    )
+    if state == "published":
+        print(f"X report for {date} was already published.")
+        return 0
+    if state != "reserved":
+        print(
+            f"X publication for {date} is unresolved; "
+            "check the profile before clearing its saved state."
+        )
+        return -4
 
-    # Call to Twitter (or also called X) service to build tweet content.
+    print("DATA API -------------------------------------------")
+    print(report.model_dump_json(indent=4))
     twitter_service = TwitterService(create_tweet, build_tweet)
-
-    tweet = twitter_service.post_weather_report(
+    tweet_url = twitter_service.post_weather_report(
         api_key_for_x,
         api_key_secret_for_x,
         access_token_for_x,
         access_secret_token_for_x,
-        weather_day_summary_report
+        report,
     )
-
-    if tweet == "NONE":
+    if tweet_url == "NONE":
         print("Error in create tweet process!")
         return -3
 
-    print(f'Created tweet: {tweet}')
-
+    publication_state.mark_published(
+        "x", weather_underground_station_id, date, tweet_url
+    )
+    print(f"Created tweet: {tweet_url}")
     return 0
 
-if __name__ == "__main__":
 
+def cli() -> int:
     parser = argparse.ArgumentParser(description="Obtain weather data.")
-    
-    # Weather Underground arguments.
-    parser.add_argument("--weather_underground_station_id", 
-                        type=str, 
-                        help="Weather Underground station ID."
+    parser.add_argument(
+        "--weather_underground_station_id",
+        help="Weather Underground station ID.",
     )
-    parser.add_argument("--weather_underground_api_key", 
-                        type=str, 
-                        help="Weather Underground api key."
+    parser.add_argument(
+        "--weather_underground_api_key",
+        help="Weather Underground API key.",
     )
-    
-    # X (Twitter) arguments.
-    parser.add_argument("--x_api_key", type=str, help="X (Twitter) api key")
-    parser.add_argument("--x_api_key_secret", type=str, help="X (Twitter) secret api key")
-    parser.add_argument("--x_access_token", type=str, help="X (Twitter) access token")
-    parser.add_argument("--x_access_secret_token", type=str, help="X (Twitter) access secret token")
-
+    parser.add_argument("--x_api_key", help="X (Twitter) API key")
+    parser.add_argument(
+        "--x_api_key_secret", help="X (Twitter) secret API key"
+    )
+    parser.add_argument("--x_access_token", help="X (Twitter) access token")
+    parser.add_argument(
+        "--x_access_secret_token", help="X (Twitter) access secret token"
+    )
+    parser.add_argument(
+        "--retry-unresolved-publication",
+        action="store_true",
+        help="Retry only after verifying that no X post was created.",
+    )
     args = parser.parse_args()
+    config = AppConfig.from_args(args)
 
-    # NOTE: Priority: command line arguments > environment variables
-
-    # Weather Underground arguments.
-    weather_underground_station_id = args.weather_underground_station_id or os.getenv("WEATHER_UNDERGROUND_STATION_ID")
-    weather_underground_api_key = args.weather_underground_api_key or os.getenv("WEATHER_UNDERGROUND_API_KEY")
-
-    # X (Twitter) arguments.
-    x_api_key = args.x_api_key or os.getenv("X_API_KEY")
-    x_api_key_secret = args.x_api_key_secret or os.getenv("X_API_KEY_SECRET")
-    x_access_token = args.x_access_token or os.getenv("X_ACCESS_TOKEN")
-    x_access_secret_token = args.x_access_secret_token or os.getenv("X_ACCESS_SECRET_TOKEN")
-
-    yesterday = datetime.now() - timedelta(days=1)
-    yesterday_formatted_date = yesterday.strftime("%Y%m%d")
-
-    result = main(
-        weather_underground_station_id, 
-        weather_underground_api_key, 
-        x_api_key, 
-        x_api_key_secret, 
-        x_access_token, 
-        x_access_secret_token,
-        yesterday_formatted_date
+    return main(
+        config.station_id,
+        config.weather_api_key,
+        config.x_api_key,
+        config.x_api_key_secret,
+        config.x_access_token,
+        config.x_access_secret_token,
+        previous_report_date(time_zone=config.report_timezone),
+        config,
+        args.retry_unresolved_publication,
     )
 
-    print(f'Main result value: {result}')
+
+if __name__ == "__main__":
+    raise SystemExit(cli())

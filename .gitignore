@@ -130,6 +130,7 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.weather_station/
 env/
 venv/
 ENV/

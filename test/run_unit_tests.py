@@ -1,16 +1,25 @@
-import unittest
-import sys
 import os
+import sys
+import unittest
 
-# Get the absolute path of the current directory (where run_unit_tests.py is)
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# Add the 'weather-station' directory to the sys.path (two levels up)
 PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, ".."))
+SOURCE_ROOT = os.path.join(PROJECT_ROOT, "src")
 sys.path.insert(0, PROJECT_ROOT)
+sys.path.insert(0, SOURCE_ROOT)
+
+
+def main() -> int:
+    loader = unittest.TestLoader()
+    suite = loader.discover(
+        os.path.join(CURRENT_DIR, "unit_tests"),
+        pattern="test_*.py",
+        top_level_dir=PROJECT_ROOT,
+    )
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    return 0 if result.wasSuccessful() else 1
+
 
 if __name__ == "__main__":
-    loader = unittest.TestLoader()
-    suite = loader.discover("unit_tests", pattern="test_*.py")
-    runner = unittest.TextTestRunner()
-    runner.run(suite)
+    raise SystemExit(main())

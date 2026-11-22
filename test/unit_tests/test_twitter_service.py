@@ -1,13 +1,28 @@
 import unittest
-from unittest.mock import MagicMock
-from model.report.weather_day_summary_report import WeatherDaySummaryReport
-from services.twitter_service import TwitterService, build_tweet, translate_to_spanish_uv_risk
+from contextlib import redirect_stdout
+from io import StringIO
+from unittest.mock import MagicMock, patch
+
+import tweepy
+
+from weather_station.model.report.weather_day_summary_report import (
+    WeatherDaySummaryReport,
+)
+from weather_station.services.twitter_create_post_service import create_tweet
+from weather_station.services.twitter_service import (
+    TwitterService,
+    build_tweet,
+    translate_to_spanish_uv_risk,
+)
+
 
 class TestTwitterService(unittest.TestCase):
 
     def setUp(self):
         """Configure mocks"""
-        self.mock_create_tweet = MagicMock(return_value="https://twitter.com/user/status/123456789")
+        self.mock_create_tweet = MagicMock(
+            return_value="https://twitter.com/user/status/123456789"
+        )
 
         self.weather_report = WeatherDaySummaryReport(
             Date="2024-02-03",
@@ -98,3 +113,23 @@ class TestTwitterService(unittest.TestCase):
         self.assertEqual(translate_to_spanish_uv_risk("Very high"), "Muy alto")
         self.assertEqual(translate_to_spanish_uv_risk("Extremely high"), "Extremo")
         self.assertEqual(translate_to_spanish_uv_risk("Unknown"), "NONE")
+
+    @patch("weather_station.services.twitter_create_post_service.tweepy.Client")
+    def test_create_tweet_redacts_credentials_from_errors(self, mock_client):
+        credentials = (
+            "api-key",
+            "api-secret",
+            "access-token",
+            "access-secret",
+        )
+        mock_client.return_value.create_tweet.side_effect = tweepy.TweepyException(
+            " ".join(credentials)
+        )
+        output = StringIO()
+
+        with redirect_stdout(output):
+            result = create_tweet(*credentials, "Weather report")
+
+        self.assertEqual(result, "NONE")
+        for credential in credentials:
+            self.assertNotIn(credential, output.getvalue())

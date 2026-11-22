@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 UTILS_DIR = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "..", "..", "utils")
+    os.path.join(os.path.dirname(__file__), "..", "..", "src", "utils")
 )
 sys.path.insert(0, UTILS_DIR)
 

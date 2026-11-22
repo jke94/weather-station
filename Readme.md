@@ -46,12 +46,17 @@ python -m venv venv
 ```
 pip install -r requirements.txt
 ```
-Note: **scripts using by default environment variables** but, you can use also input arguments.
+The scripts read configuration from command-line arguments, environment
+variables, or a local `.env` file (in that precedence order). Keep secrets out
+of source control.
+
+The package lives in `src/weather_station`. Existing script paths under
+`src/weather-station` remain as compatibility wrappers.
 
 1. Get report about weather station and print in console.
 
 ```
-python src/weather-station/test/morning_daily_scheduler_on_x.py `
+python src/weather-station/morning_daily_scheduler_on_x.py `
     --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
     --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> 
 ```
@@ -103,10 +108,29 @@ python src/utils/generate_facebook_long_lived_token.py `
 - After the exchange, use `GET /me/accounts?fields=id,name,access_token` with the long-lived user token to retrieve the Page ID and Page access token. Use the Page access token for publishing.
 - Keep the App Secret and all access tokens private. Do not commit them, paste them into issues, or include them in logs. The script accepts the values as command-line arguments or from `FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`, and `FACEBOOK_SHORT_TOKEN` environment variables.
 
+## Optional configuration
+
+The following variables have defaults and can be overridden in the environment
+or `.env` file:
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `REPORT_TIME_ZONE` | `Europe/Madrid` | Time zone used to determine the previous report day |
+| `WEATHER_REQUEST_TIMEOUT_SECONDS` | `15` | Timeout for a weather API request |
+| `WEATHER_REQUEST_RETRIES` | `3` | Maximum retries for transient weather-read errors |
+| `WEATHER_PUBLISHING_STATE_PATH` | `.weather_station/publishing-state.json` | Local publication-state file |
+
+Weather reads retry transient connection, timeout, rate-limit, and server errors
+with a bounded backoff. Post creation is not automatically retried. The
+publishing workflows persist their idempotency state as a GitHub Actions
+artifact for 90 days and serialize runs per platform. If a run reports an
+unresolved publication, check the platform before manually dispatching the
+workflow with `retry_unresolved_publication` enabled.
+
 ## Run unit tests
 
 ```
-python ./src/weather-station/test/run_unit_tests.py
+python -m test.run_unit_tests
 ```
 
 ## Useful information used to build this project.
