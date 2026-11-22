@@ -51,12 +51,13 @@ jobs:
             FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
             WEATHER_PUBLISHING_STATE_PATH: .weather_station/publishing-state.json
             RETRY_UNRESOLVED_PUBLICATION: ${{ inputs.retry_unresolved_publication }}
+            PYTHONPATH: src
         run: |
           args=()
           if [ "$RETRY_UNRESOLVED_PUBLICATION" = "true" ]; then
             args+=(--retry-unresolved-publication)
           fi
-          python ./src/weather-station/post_morning_daily_post_in_facebook.py "${args[@]}"
+          python -m weather_station.post_morning_daily_post_in_facebook "${args[@]}"
 
       - name: Save publication state
         if: ${{ always() && hashFiles('.weather_station/publishing-state.json') != '' }}

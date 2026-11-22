@@ -50,13 +50,17 @@ The scripts read configuration from command-line arguments, environment
 variables, or a local `.env` file (in that precedence order). Keep secrets out
 of source control.
 
-The package lives in `src/weather_station`. Existing script paths under
-`src/weather-station` remain as compatibility wrappers.
+The package lives in `src/weather_station`. Set the source directory on
+`PYTHONPATH` before running its module CLIs:
+
+```
+$env:PYTHONPATH = "src"
+```
 
 1. Get report about weather station and print in console.
 
 ```
-python src/weather-station/morning_daily_scheduler_on_x.py `
+python -m weather_station.morning_daily_scheduler_on_x `
     --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
     --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> 
 ```
@@ -64,7 +68,7 @@ python src/weather-station/morning_daily_scheduler_on_x.py `
 2. Get report from previous day and publish tweet in X (Twitter) platform.
 
 ```
-python src/weather-station/post_morning_daily_tweet_in_x.py `
+python -m weather_station.post_morning_daily_tweet_in_x `
     --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
     --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> `
     --x_api_key <X_API_KEY> `
@@ -85,7 +89,7 @@ python src/weather-station/post_morning_daily_tweet_in_x.py `
 > token or Page configuration; never share access tokens in logs or reports.
 
 ```
-python src/weather-station/post_morning_daily_post_in_facebook.py `
+python -m weather_station.post_morning_daily_post_in_facebook `
     --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
     --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> `
     --facebook_access_token <FACEBOOK_ACCESS_TOKEN> `

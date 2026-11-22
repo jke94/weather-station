@@ -53,12 +53,13 @@ jobs:
             X_ACCESS_SECRET_TOKEN: ${{ secrets.X_ACCESS_SECRET_TOKEN }}
             WEATHER_PUBLISHING_STATE_PATH: .weather_station/publishing-state.json
             RETRY_UNRESOLVED_PUBLICATION: ${{ inputs.retry_unresolved_publication }}
+            PYTHONPATH: src
         run: |
           args=()
           if [ "$RETRY_UNRESOLVED_PUBLICATION" = "true" ]; then
             args+=(--retry-unresolved-publication)
           fi
-          python ./src/weather-station/post_morning_daily_tweet_in_x.py "${args[@]}"
+          python -m weather_station.post_morning_daily_tweet_in_x "${args[@]}"
 
       - name: Save publication state
         if: ${{ always() && hashFiles('.weather_station/publishing-state.json') != '' }}
