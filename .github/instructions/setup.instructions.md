@@ -4,20 +4,24 @@ applyTo: "**/*"
 
 # Setup commands
 
-0. Create a Python virtual environment:
+Run the commands from the repository root.
+
+## Linux and macOS
+
+Create and activate a Python virtual environment, then install dependencies:
 
 ```bash
-python -m venv venv
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
 ```
 
-1. Activate the Python virtual environment:
+## Windows (PowerShell)
 
-```bash
-.\venv\Scripts\activate
-```
+Create and activate a Python virtual environment, then install dependencies:
 
-2. Install Python dependencies:
-
-```bash
-pip install -r .\requirements.txt
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r .\requirements.txt
 ```

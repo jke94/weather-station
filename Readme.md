@@ -33,41 +33,86 @@ Here, a picture about the weather station 📸
 
 ## How to run
 
-0. Recommended create python virtual environment and install **requirements.txt** packages.
-
-```
-python -m venv venv
-```
-
-```
-./venv/Scripts/activate
-```
-
-```
-pip install -r requirements.txt
-```
 The scripts read configuration from command-line arguments, environment
 variables, or a local `.env` file (in that precedence order). Keep secrets out
 of source control.
 
-The package lives in `src/weather_station`. Set the source directory on
-`PYTHONPATH` before running its module CLIs:
+The package lives in `src/weather_station`. Create a virtual environment,
+install the **requirements.txt** packages, and set `PYTHONPATH` before running
+the module CLIs.
 
+### Linux and macOS
+
+Run these commands from the repository root:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+export PYTHONPATH=src
 ```
+
+Print a report about the weather station:
+
+```bash
+python -m weather_station.morning_daily_scheduler_on_x \
+    --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> \
+    --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY>
+```
+
+Publish the previous day's report on X:
+
+```bash
+python -m weather_station.post_morning_daily_tweet_in_x \
+    --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> \
+    --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> \
+    --x_api_key <X_API_KEY> \
+    --x_api_key_secret <X_API_KEY_SECRET> \
+    --x_access_token <X_ACCESS_TOKEN> \
+    --x_access_secret_token <X_ACCESS_SECRET_TOKEN>
+```
+
+Publish the previous day's report on Facebook:
+
+```bash
+python -m weather_station.post_morning_daily_post_in_facebook \
+    --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> \
+    --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> \
+    --facebook_access_token <FACEBOOK_ACCESS_TOKEN> \
+    --facebook_page_id <FACEBOOK_PAGE_ID>
+```
+
+Generate a long-lived Facebook token:
+
+```bash
+python src/utils/generate_facebook_long_lived_token.py \
+    --app_id <FACEBOOK_APP_ID> \
+    --app_secret <FACEBOOK_SECRET_APP> \
+    --short_token <FACEBOOK_SHORT_TOKEN>
+```
+
+### Windows (PowerShell)
+
+Run these commands from the repository root:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r .\requirements.txt
 $env:PYTHONPATH = "src"
 ```
 
-1. Get report about weather station and print in console.
+Print a report about the weather station:
 
-```
+```powershell
 python -m weather_station.morning_daily_scheduler_on_x `
     --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
-    --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> 
+    --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY>
 ```
 
-2. Get report from previous day and publish tweet in X (Twitter) platform.
+Publish the previous day's report on X:
 
-```
+```powershell
 python -m weather_station.post_morning_daily_tweet_in_x `
     --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
     --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> `
@@ -77,7 +122,24 @@ python -m weather_station.post_morning_daily_tweet_in_x `
     --x_access_secret_token <X_ACCESS_SECRET_TOKEN>
 ```
 
-3. Get report from previous day and publish post in Facebook platform.
+Publish the previous day's report on Facebook:
+
+```powershell
+python -m weather_station.post_morning_daily_post_in_facebook `
+    --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
+    --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> `
+    --facebook_access_token <FACEBOOK_ACCESS_TOKEN> `
+    --facebook_page_id <FACEBOOK_PAGE_ID>
+```
+
+Generate a long-lived Facebook token:
+
+```powershell
+python .\src\utils\generate_facebook_long_lived_token.py `
+    --app_id <FACEBOOK_APP_ID> `
+    --app_secret <FACEBOOK_SECRET_APP> `
+    --short_token <FACEBOOK_SHORT_TOKEN>
+```
 
 > [!NOTE]
 > Use `generate_facebook_long_lived_token.py` to exchange a short-lived user
@@ -87,23 +149,6 @@ python -m weather_station.post_morning_daily_tweet_in_x `
 > If publishing fails, the workflow logs the Graph API response details alongside
 > the HTTP status. Check the returned error message and code before changing the
 > token or Page configuration; never share access tokens in logs or reports.
-
-```
-python -m weather_station.post_morning_daily_post_in_facebook `
-    --weather_underground_station_id <WEATHER_UNDERGROUND_STATION_ID> `
-    --weather_underground_api_key <WEATHER_UNDERGROUND_API_KEY> `
-    --facebook_access_token <FACEBOOK_ACCESS_TOKEN> `
-    --facebook_page_id <FACEBOOK_PAGE_ID>
-```
-
-How to use `generate_facebook_long_lived_token.py`:
-
-```
-python src/utils/generate_facebook_long_lived_token.py `
-  --app_id <FACEBOOK_APP_ID> `
-  --app_secret <FACEBOOK_SECRET_APP> `
-  --short_token <FACEBOOK_SHORT_TOKEN>
-```
 
 - For `app_id` and `app_secret`, open `https://developers.facebook.com/`, select **My Apps**, choose the app, and open **App settings → Basic**. The App ID and App Secret must be from the same app.
 
@@ -133,7 +178,17 @@ workflow with `retry_unresolved_publication` enabled.
 
 ## Run unit tests
 
+Activate the virtual environment as shown above, then run the test command.
+
+### Linux and macOS
+
+```bash
+python -m test.run_unit_tests
 ```
+
+### Windows (PowerShell)
+
+```powershell
 python -m test.run_unit_tests
 ```
 
