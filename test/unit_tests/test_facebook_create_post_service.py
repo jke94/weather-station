@@ -5,12 +5,12 @@ from unittest.mock import patch
 
 import requests
 
-from services.facebook_create_post_service import create_post
+from weather_station.services.facebook_create_post_service import create_post
 
 
 class TestFacebookCreatePostService(unittest.TestCase):
 
-    @patch('services.facebook_create_post_service.requests.post')
+    @patch('weather_station.services.facebook_create_post_service.requests.post')
     def test_create_post_returns_url_when_facebook_succeeds(self, mock_post):
         response = mock_post.return_value
         response.json.return_value = {'id': '123_456'}
@@ -20,7 +20,7 @@ class TestFacebookCreatePostService(unittest.TestCase):
         self.assertEqual(result, 'https://www.facebook.com/123_456')
         mock_post.assert_called_once()
 
-    @patch('services.facebook_create_post_service.requests.post')
+    @patch('weather_station.services.facebook_create_post_service.requests.post')
     def test_create_post_logs_facebook_error_details(self, mock_post):
         response = mock_post.return_value
         response.status_code = 400

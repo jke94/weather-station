@@ -4,8 +4,8 @@ applyTo: "**/test/**/*.py"
 
 # Testing instructions
 
-Run the unit test suite with:
+Run the unit test suite from the repository root with:
 
 ```bash
-python .\src\weather-station\test\run_unit_tests.py
+python -m test.run_unit_tests
 ```

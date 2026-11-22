@@ -1,4 +1,4 @@
-from model.pws.history.daily.metric import Metric
+from weather_station.model.pws.history.daily.metric import Metric
 from pydantic import BaseModel
 
 # Observation metric

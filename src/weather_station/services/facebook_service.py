@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Callable
 
-from model.report.weather_day_summary_report import WeatherDaySummaryReport
+from weather_station.model.report.weather_day_summary_report import (
+    WeatherDaySummaryReport,
+)
 
 
 def translate_to_spanish_uv_risk(uv_risk: str) -> str:

@@ -4,10 +4,23 @@ on:
   schedule:
     - cron: '30 07 * 3-10 *'      # 09:30 CEST (march-october) -> 07:30 UTC
     - cron: '30 08 * 11,12,1,2 *' # 09:30 CET  (november-february) -> 08:30 UTC
+  workflow_dispatch:
+    inputs:
+      retry_unresolved_publication:
+        description: Retry only after confirming the prior attempt did not post
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   fetch_weather:
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    concurrency:
+      group: publish-weather-x
+      cancel-in-progress: false
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -23,7 +36,12 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Unit Tests
-        run: python ./src/weather-station/test/run_unit_tests.py
+        run: python -m test.run_unit_tests
+
+      - name: Restore publication state
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python ./src/utils/restore_publishing_state.py --platform x
 
       - name: Run morning daily scheduler tweet in X (Twitter) script.
         env:
@@ -33,4 +51,21 @@ jobs:
             X_API_KEY_SECRET: ${{ secrets.X_API_KEY_SECRET }}
             X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
             X_ACCESS_SECRET_TOKEN: ${{ secrets.X_ACCESS_SECRET_TOKEN }}
-        run: python ./src/weather-station/post_morning_daily_tweet_in_x.py
+            WEATHER_PUBLISHING_STATE_PATH: .weather_station/publishing-state.json
+            RETRY_UNRESOLVED_PUBLICATION: ${{ inputs.retry_unresolved_publication }}
+            PYTHONPATH: src
+        run: |
+          args=()
+          if [ "$RETRY_UNRESOLVED_PUBLICATION" = "true" ]; then
+            args+=(--retry-unresolved-publication)
+          fi
+          python -m weather_station.post_morning_daily_tweet_in_x "${args[@]}"
+
+      - name: Save publication state
+        if: ${{ always() && hashFiles('.weather_station/publishing-state.json') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: weather-station-state-x
+          path: .weather_station/publishing-state.json
+          include-hidden-files: true
+          retention-days: 90

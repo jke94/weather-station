@@ -1,7 +1,13 @@
 import unittest
 from unittest.mock import MagicMock
-from model.report.weather_day_summary_report import WeatherDaySummaryReport
-from services.facebook_service import FacebookService, build_post, translate_to_spanish_uv_risk
+from weather_station.model.report.weather_day_summary_report import (
+    WeatherDaySummaryReport,
+)
+from weather_station.services.facebook_service import (
+    FacebookService,
+    build_post,
+    translate_to_spanish_uv_risk,
+)
 
 class TestFacebookService(unittest.TestCase):
 

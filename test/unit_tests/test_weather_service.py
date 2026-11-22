@@ -6,9 +6,13 @@ from unittest.mock import MagicMock
 import jsonschema
 import requests
 
-from services.weather_service import WeatherService
-from model.report.weather_day_summary_report import WeatherDaySummaryReport
-from model.pws.history.daily.weather_response import WeatherResponse
+from weather_station.services.weather_service import WeatherService
+from weather_station.model.report.weather_day_summary_report import (
+    WeatherDaySummaryReport,
+)
+from weather_station.model.pws.history.daily.weather_response import (
+    WeatherResponse,
+)
 
 class TestWeatherService(unittest.TestCase):
     def setUp(self):
@@ -134,6 +138,20 @@ class TestWeatherService(unittest.TestCase):
             requests.exceptions.RequestException("network unavailable"),
             "HTTP request failed: network unavailable",
         )
+
+    def test_request_error_redacts_api_key(self):
+        self.mock_fetch_data.side_effect = requests.exceptions.RequestException(
+            "request failed for apiKey=FAKE_API_KEY"
+        )
+        output = StringIO()
+
+        with redirect_stdout(output):
+            report = self.weather_service.build_weather_day_summary_report(
+                "TEST123", "FAKE_API_KEY", "20240203"
+            )
+
+        self.assertIsNone(report)
+        self.assertNotIn("FAKE_API_KEY", output.getvalue())
 
     def test_value_error_returns_none_and_reports_error(self):
         self.assert_service_error_returns_none(

@@ -1,4 +1,4 @@
-from model.pws.history.daily.observation import Observation
+from weather_station.model.pws.history.daily.observation import Observation
 from pydantic import BaseModel
 from typing import List
 

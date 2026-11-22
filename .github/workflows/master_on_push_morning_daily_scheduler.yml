@@ -23,10 +23,11 @@ jobs:
             pip install -r requirements.txt
 
       - name: Run Unit Tests
-        run: python ./src/weather-station/test/run_unit_tests.py
+        run: python -m test.run_unit_tests
 
       - name: Run Script
         env:
             WEATHER_UNDERGROUND_STATION_ID: ${{ secrets.WEATHER_UNDERGROUND_STATION_ID }}
             WEATHER_UNDERGROUND_API_KEY: ${{ secrets.WEATHER_UNDERGROUND_API_KEY }}
-        run: python ./src/weather-station/morning_daily_scheduler_on_x.py
+            PYTHONPATH: src
+        run: python -m weather_station.morning_daily_scheduler_on_x
